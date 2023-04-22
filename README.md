@@ -66,10 +66,10 @@ int x = __device__d_x[1];
 在主函数中向全局内存传递数据,如:
 ```java
 double[] ha = {};//length:128
-for(int x = 0; x < N ; ++x) {
-    ha[x] = 1.23;
-}
-ICuda.cudaMemcpyToSymbol("d_x","ha",ICuda.sizeof("double")*128);
+        for(int x = 0; x < N ; ++x) {
+        ha[x] = 1.23;
+        }
+        ICuda.cudaMemcpyToSymbol("d_x","ha",ICuda.sizeof("double")*128);
 ```
 将会转义为
 ```c
@@ -93,16 +93,16 @@ cudaMemcpyToSymbol(d_x,ha,sizeof(double)*128);
 例:
 ```java
 double[] $a = {};
-ICuda.cudaMalloc("$a",ICuda.sizeof("double")*2);
+        ICuda.cudaMalloc("$a",ICuda.sizeof("double")*2);
 ```
 用一个空指针,分配了显存,大小为2个
 接下来,让我们看一下动态全局内存传递
 
 ```java
 double[] $b = (double[]) ICuda.malloc(ICuda.sizeof("double")*20000);
-double[] $a = {};
-ICuda.cudaMalloc("$a",ICuda.sizeof("double")*20000);
-ICuda.cudaMemcpy("$a","$b",ICuda.sizeof("double")*20000,"cudaMemcpyHostToDevice");
+        double[] $a = {};
+        ICuda.cudaMalloc("$a",ICuda.sizeof("double")*20000);
+        ICuda.cudaMemcpy("$a","$b",ICuda.sizeof("double")*20000,"cudaMemcpyHostToDevice");
 ```
 
 同样的,动态全局内存可见性与cuda中的无异
@@ -147,7 +147,7 @@ reduce<<<grid_size,block_size>>>();
 ```java
 final int block_size = 128;
 final int grid_size =  (N + block_size - 1) / block_size;
-__global__reduce();
+        __global__reduce();
 ```
 若是有注释提示,如：
 ```
@@ -164,8 +164,8 @@ __global__reduce<<<block_size,grid_size,128>>>();//tags:<<<block_size,grid_size,
 也可以用复杂一点的```dim3```类型
 ```java
 dim3 grid_size = new dim3(2,2,2);
-dim3 block_size = new dim3(3,3,3)
-__global__reduce();
+        dim3 block_size = new dim3(3,3,3)
+        __global__reduce();
 ```
 
 其中的任何一个变量名都不建议更改和重复使用
@@ -176,9 +176,18 @@ __global__reduce();
 ```java
 public void __global__核函数名() {
 //省略
-}//End
+        }//End
 ```
 **注意**:最后的//End不能省略
+
+### 设备函数
+```java
+public 任意返回值 __device__核函数名() {
+
+}//End
+```
+*目前设备函数任有较多缺陷,需要逐步解决*
+
 
 ## 原子函数
 
@@ -248,6 +257,75 @@ static void cudaGetDeviceProperties(cudaDeviceProp pop,int id) {};
 将会输出显卡的信息
 
 -----
+
+## curand标准库
+**已支持所有在Host主机上实现的方法!**
+### Host调用API
+- 获取算法
+```java
+static curndRngType_t CURAND_RNG_PSEUDO_DEFAULT = new curndRngType_t();
+    static curndRngType_t CURAND_RNG_PSEUDO_XORWOW = new curndRngType_t();
+    static curndRngType_t CURAND_RNG_PSEUDO_MPG19937 = new curndRngType_t();
+    static curndRngType_t CURAND_RNG_PSEUDO_MRG32K3A = new curndRngType_t();
+    static curndRngType_t CURAND_RNG_PSEUDO_PHILOX4_32_10 = new curndRngType_t();
+    static curndRngType_t CURAND_RNG_PSEUDO_MT19937 = new curndRngType_t();
+	//上面是伪随机数生成
+    //下面是拟随机数数生成
+    static curndRngType_t CURAND_RNG_QUASI_SOBOL32 = new curndRngType_t();
+    static curndRngType_t CURAND_RNG_QUASI_SCRAMBLED_SOBOL32 = new curndRngType_t();
+    static curndRngType_t CURAND_RNG_QUASI_SOBOL64 = new curndRngType_t();
+    static curndRngType_t CURAND_RNG_QUASI_SCRAMBLED_SOBOL64 = new curndRngType_t();
+```
+- 创建:
+```java
+ static void curandCreateGenerator(curandGenerator_t c, curndRngType_t rng_type) {}//c是指针
+```
+- Generator Options
+```java
+static curandStatus_t curandSetPseudoRandomGeneratorSeed(curandGenerator_t c,long seed) {return null;}
+    static curandStatus_t curandSetPseudoRandomGeneratorSeed(curandGenerator_t generator,String seed) {
+        return null;
+    }
+    static curandStatus_t curandSetPseudoRandomGeneratorSeed(curandGenerator_t generator,unsigned seed) {
+        return null;
+    }
+    static curandStatus_t curandSetQuasiRandomGeneratorDimensions(curandGenerator_t generator, int num_dimensions) {
+        return null;
+    }
+    static curandStatus_t curandSetQuasiRandomGeneratorDimensions(curandGenerator_t generator, unsigned num_dimensions) {
+        return null;
+    }
+    static curandStatus_t curandSetGeneratorOffset(curandGenerator_t generator, unsigned offset) {
+        return null;
+    }
+    static curandStatus_t curandSetGeneratorOffset(curandGenerator_t generator, long offset) {
+        return null;
+    }
+```
+-- Seed
+是一个64-bit integar，用来初始化伪随机数生成器的起始状态，相同的seed经常生成相同的随机数序列
+-- Offset
+offset参数用来跳过随机数序列的开头，第一个随机数从序列的第offset个开始取，这使得多次运行同一程序，从相同随机数序列生成的随机数不重叠。is not available for the CURAND_RNG_PSEUDO_MTGP32 and CURAND_RNG_PSEUDO_MT19937 generators
+-- Order
+用来选择结果如何在全局内存中排序
+CURAND_ORDERING_PSEUDO_DEFAULT
+CURAND_ORDERING_PSEUDO_LEGACY
+CURAND_ORDERING_PSEUDO_BEST
+CURAND_ORDERING_PSEUDO_SEEDED
+CURAND_ORDERING_QUASI_DEFAULT (用于拟随机数的选项)
+- Generation Functions
+```java
+static <T> void curandGenerateUniformDouble(curandGenerator_t c, T memory, int N) {}
+    static <T> void curandGenerateNormalDouble(curandGenerator_t generator, T $gX, int N,double a,double b) {}
+    static <T> void curandGenerateNormalDouble(curandGenerator_t generator, double[] $gX, int N,double a,double b) {}
+    static <T> void curandGenerateNormalFloat(curandGenerator_t generator, float[] $gX, int N,float a,float b) {}
+    static <T> void curandGenerateNormalInt(curandGenerator_t generator, int[] $gX, int N,int a,int b) {}
+    static <T> void curandGenerateNormalLong(curandGenerator_t generator, long[] $gX, int N,long a,long b) {}
+```
+
+~~至于Device上的API,还正在做~~
+[========]
+
 
 # 附页
 
