@@ -2,7 +2,7 @@
 @[TOC]
 
 # AstralPathCuda 文档
-2023-04-07 09:40:25 星期五
+2023-04-22 20:57:09 星期六
 
 ## 介绍
 使用GPU完成科学计算不仅能提高计算的稳健性,更能提供一个无与伦比的速度,Java也是一种常用的CPU语言,开源平台为其提供了丰富的环境,但Cuda和Java的混合使用一直都是个麻烦事,毕竟两者本来都不该有交集,但GPU的高并发能力强大无比,CSDN上基本都是Java通过JNI调用CUDA程序,但麻烦无比,而使用JCuda也需要提供核函数的PTX文件,更加麻烦,还增加了开发难度,鉴于此前景,我开始了JavaGPU混合开发辅助包AstralPathCuda(以下简称APC)的编写.
@@ -202,27 +202,27 @@ public void __global__核函数名() {
 支持线程束表决函数
 ```java
 	static int __any_sync(unsigned mask,int predicate){return 0;};
-    static int __all_sync(unsigned mask,int predicate){return 0;};
-    static int __any_sync(String mask,int predicate){return 0;};
-    static int __all_sync(String mask,int predicate){return 0;};
-    static unsigned __ballot_sync(String mask, int predicate){return null;};
-    static unsigned __ballot_sync(String mask,boolean pre){return null;};
+static int __all_sync(unsigned mask,int predicate){return 0;};
+static int __any_sync(String mask,int predicate){return 0;};
+static int __all_sync(String mask,int predicate){return 0;};
+static unsigned __ballot_sync(String mask, int predicate){return null;};
+static unsigned __ballot_sync(String mask,boolean pre){return null;};
 ```
 这里不仅包含unsigned的类型,也有String类型,为的是开发方便
 支持线程束洗牌函数
 ```java
 static <T> T __shfl_sync(String mask, T v, int srcLane,int w){return null;};
-    static <T> T __shfl_up_sync(String mask, T v, int srcLane,int w){return null;};
-    static <T> T __shfl_down_sync(String mask, T v, int srcLane,int w){return null;};
-    static <T> T __shfl_xor_sync(String mask, T v, int srcLane,int w){return null;};
+static <T> T __shfl_up_sync(String mask, T v, int srcLane,int w){return null;};
+static <T> T __shfl_down_sync(String mask, T v, int srcLane,int w){return null;};
+static <T> T __shfl_xor_sync(String mask, T v, int srcLane,int w){return null;};
 ```
 上面是带参数w的,
 下面是不带参数w的.
 ```java
     static <T> T __shfl_sync(String mask, T v, int srcLane){return null;};
-    static <T> T __shfl_up_sync(String mask, T v, int srcLane){return null;};
-    static <T> T __shfl_down_sync(String mask, T v, int srcLane){return null;};
-    static <T> T __shfl_xor_sync(String mask, T v, int srcLane){return null;};
+static <T> T __shfl_up_sync(String mask, T v, int srcLane){return null;};
+static <T> T __shfl_down_sync(String mask, T v, int srcLane){return null;};
+static <T> T __shfl_xor_sync(String mask, T v, int srcLane){return null;};
 ```
 
 ## 运行时API函数
@@ -241,9 +241,9 @@ static void cudaGetDeviceProperties(cudaDeviceProp pop,int id) {};
         cudaDeviceProp prop = new cudaDeviceProp();
         ICuda.cudaGetDeviceProperties(prop,device_id);
         ICuda.printf("Device id:                                 %d\n",
-                device_id);
+        device_id);
         ICuda.printf("Device name:                               %s\n",
-                prop.name);
+        prop.name);
 ```
 将会输出显卡的信息
 
@@ -258,54 +258,54 @@ static void cudaGetDeviceProperties(cudaDeviceProp pop,int id) {};
 Java源码:
 ```java
 public class ReduceSHFL implements ICuda {
-    public final int N = 100000;//global
-    public double[] __device__d_x;//length:100000
-    public double[] __device__d;//length:2
-    public void __global__reduce() {
-        final int tid = threadIdxx;
-        final int bid = blockIdxx;
-        final int n = bid * blockDimx + tid;
-        double[] __shared__s_y = {};//length:128
-        if (n < N) {
-            __shared__s_y[tid] = ICuda.__ldg(__device__d_x[n]);
-        }
-        ICuda.__syncthreads();
+  public final int N = 100000;//global
+  public double[] __device__d_x;//length:100000
+  public double[] __device__d;//length:2
+  public void __global__reduce() {
+    final int tid = threadIdxx;
+    final int bid = blockIdxx;
+    final int n = bid * blockDimx + tid;
+    double[] __shared__s_y = {};//length:128
+    if (n < N) {
+      __shared__s_y[tid] = ICuda.__ldg(__device__d_x[n]);
+    }
+    ICuda.__syncthreads();
 
-        for (int offset = blockDimx >> 1; offset >= 32; offset >>= 1)
-        {
-            if (tid < offset)
-            {
-                __shared__s_y[tid] += __shared__s_y[tid + offset];
-            }
-            ICuda.__syncthreads();
-        }
+    for (int offset = blockDimx >> 1; offset >= 32; offset >>= 1)
+    {
+      if (tid < offset)
+      {
+        __shared__s_y[tid] += __shared__s_y[tid + offset];
+      }
+      ICuda.__syncthreads();
+    }
 
-        double y = __shared__s_y[tid];
-        for (int offset = 16; offset > 0; offset >>= 1)
-        {
-            y += ICuda.__shfl_down_sync("0xffffffff", y, offset);
-        }
+    double y = __shared__s_y[tid];
+    for (int offset = 16; offset > 0; offset >>= 1)
+    {
+      y += ICuda.__shfl_down_sync("0xffffffff", y, offset);
+    }
 
-        if (tid == 0)
-        {
-            ICuda.atomicAdd(__device__d[0], y);
-        }
-    }//End
+    if (tid == 0)
+    {
+      ICuda.atomicAdd(__device__d[0], y);
+    }
+  }//End
 
-    @Override
-    public void main() {
-        double[] ha = {};//length:100000
-        for(int x = 0; x < N ; ++x) {
-            ha[x] = 1.23;
-        }
+  @Override
+  public void main() {
+    double[] ha = {};//length:100000
+    for(int x = 0; x < N ; ++x) {
+      ha[x] = 1.23;
+    }
 
-        ICuda.cudaMemcpyToSymbol("d_x","ha",ICuda.sizeof("double")*N);
-        final int block_size = 128;
-        final int grid_size =  (N + block_size - 1) / block_size;
-        __global__reduce();
-        ICuda.cudaMemcpyFromSymbol("ha","d",ICuda.sizeof("double")*2);
-        System.out.printf("c=%f\n",ha[0]);
-    }//End
+    ICuda.cudaMemcpyToSymbol("d_x","ha",ICuda.sizeof("double")*N);
+    final int block_size = 128;
+    final int grid_size =  (N + block_size - 1) / block_size;
+    __global__reduce();
+    ICuda.cudaMemcpyFromSymbol("ha","d",ICuda.sizeof("double")*2);
+    System.out.printf("c=%f\n",ha[0]);
+  }//End
 }
 ```
 转义的C程序
@@ -364,60 +364,63 @@ double ha[100000] =  {};//length:100000
 ### 线程束测试
 
 Java源码:
+
 ```java
-public class TestWarp implements ICuda{
-    public final int WIDTH = 8;//global
-    public final int N = 32;//global
-    public void __global__hello() {//Start
-        int tid = threadIdxx;
-        int lane_id = tid % WIDTH;
+public class TestWarp implements ICuda {
+  public final int WIDTH = 8;//global
+  public final int N = 32;//global
 
-        if (tid == 0) System.out.printf("threadIdx.x: ");
-        System.out.printf("%2d ", tid);
-        if (tid == 0) System.out.printf("\n");
+  public void __global__hello() {//Start
+    int tid = threadIdxx;
+    int lane_id = tid % WIDTH;
 
-        if (tid == 0) System.out.printf("lane_id:     ");
-        System.out.printf("%2d ", lane_id);
-        if (tid == 0) System.out.printf("\n");
+    if (tid == 0) System.out.print("threadIdx.x: ");
+    System.out.printf("%2d ", tid);
+    if (tid == 0) System.out.print("\n");
 
-        unsigned mask1 = ICuda.__ballot_sync("0xffffffff", tid > 0);
-        unsigned mask2 = ICuda.__ballot_sync("0xffffffff", tid == 0);
-        if (tid == 0) System.out.printf("FULL_MASK = %x\n", "0xffffffff");
-        if (tid == 1) System.out.printf("mask1     = %x\n", mask1);
-        if (tid == 0) System.out.printf("mask2     = %x\n", mask2);
+    if (tid == 0) System.out.print("lane_id:     ");
+    System.out.printf("%2d ", lane_id);
+    if (tid == 0) System.out.print("\n");
 
-        int result = ICuda.__all_sync("0xffffffff", tid);
-        if (tid == 0) System.out.printf("all_sync (FULL_MASK): %d\n", result);
+    unsigned mask1 = ICuda.__ballot_sync("0xffffffff", tid > 0);
+    unsigned mask2 = ICuda.__ballot_sync("0xffffffff", tid == 0);
+    if (tid == 0) System.out.printf("FULL_MASK = %x\n", "0xffffffff");
+    if (tid == 1) System.out.printf("mask1     = %x\n", mask1);
+    if (tid == 0) System.out.printf("mask2     = %x\n", mask2);
 
-        int value = ICuda.__shfl_sync("0xffffffff", tid, 2, WIDTH);
-        if (tid == 0) System.out.printf("shfl:      ");
-        System.out.printf("%2d ", value);
-        if (tid == 0) System.out.printf("\n");
+    int result = ICuda.__all_sync("0xffffffff", tid);
+    if (tid == 0) System.out.printf("all_sync (FULL_MASK): %d\n", result);
 
-        value = ICuda.__shfl_up_sync("0xffffffff", tid, 1, WIDTH);
-        if (tid == 0) System.out.printf("shfl_up:   ");
-        System.out.printf("%2d ", value);
-        if (tid == 0) System.out.printf("\n");
+    int value = ICuda.__shfl_sync("0xffffffff", tid, 2, WIDTH);
+    if (tid == 0) System.out.print("shfl:      ");
+    System.out.printf("%2d ", value);
+    if (tid == 0) System.out.print("\n");
 
-        value = ICuda.__shfl_down_sync("0xffffffff", tid, 1, WIDTH);
-        if (tid == 0) System.out.printf("shfl_down: ");
-        System.out.printf("%2d ", value);
-        if (tid == 0) System.out.printf("\n");
+    value = ICuda.__shfl_up_sync("0xffffffff", tid, 1, WIDTH);
+    if (tid == 0) System.out.print("shfl_up:   ");
+    System.out.printf("%2d ", value);
+    if (tid == 0) System.out.print("\n");
 
-        value = ICuda.__shfl_xor_sync("0xffffffff", tid, 1, WIDTH);
-        if (tid == 0) System.out.printf("shfl_xor:  ");
-        System.out.printf("%2d ", value);
-        if (tid == 0) System.out.printf("\n");
-    }//End
-    @Override
-    public void main() {
+    value = ICuda.__shfl_down_sync("0xffffffff", tid, 1, WIDTH);
+    if (tid == 0) System.out.print("shfl_down: ");
+    System.out.printf("%2d ", value);
+    if (tid == 0) System.out.print("\n");
 
-        final int block_size = 16;
-        final int grid_size = 1;
+    value = ICuda.__shfl_xor_sync("0xffffffff", tid, 1, WIDTH);
+    if (tid == 0) System.out.print("shfl_xor:  ");
+    System.out.printf("%2d ", value);
+    if (tid == 0) System.out.print("\n");
+  }//End
 
-        __global__hello();
+  @Override
+  public void main() {
 
-    }//End
+    final int block_size = 16;
+    final int grid_size = 1;
+
+    __global__hello();
+
+  }//End
 }
 
 ```
@@ -485,122 +488,128 @@ int main(int argc, char* argv[]) {
 
 ```java
     int N = 0;
-    
-    int argc = Integer.MAX_VALUE;
-    String[] argv = new String[Integer.MAX_VALUE];
-    
-    int gridDimx = 0;
-    int gridDimy = 0;
-    int gridDimz = 0;
 
-    int blockIdxx = 0;
-    int blockIdxy = 0;
-    int blockIdxz = 0;
-    int threadIdxx = 0;
-    int threadIdxy = 0;
-    int threadIdxz = 0;
-    int blockDimx = 128;
-    int blockDimy = 0;
-    int blockDimz = 0;
+        int argc = Integer.MAX_VALUE;
+        String[] argv = new String[Integer.MAX_VALUE];
+
+        int gridDimx = 0;
+        int gridDimy = 0;
+        int gridDimz = 0;
+
+        int blockIdxx = 0;
+        int blockIdxy = 0;
+        int blockIdxz = 0;
+        int threadIdxx = 0;
+        int threadIdxy = 0;
+        int threadIdxz = 0;
+        int blockDimx = 128;
+        int blockDimy = 0;
+        int blockDimz = 0;
 ```
 ### 所有函数
 
 ```java
 /**
-     * 这些是Cuda和C语言提供的部分函数
-     */
-    /**
-     * 这些是Cuda和C语言提供的部分函数
-     */
-    static <T> T malloc(int t) {return null;}
-    static <T> void cudaMalloc(String s, int t) {}
-    static void free(Object... o) {}
-    static void cudaFree(Object... o) {}
+ * 这些是Cuda和C语言提供的部分函数
+ */
+/**
+ * 这些是Cuda和C语言提供的部分函数
+ */
+static <T> T malloc(int t) {return null;}
+static <T> void cudaMalloc(String s, int t) {}
+static void free(Object... o) {}
+static void cudaFree(Object... o) {}
 
-    static float sqrt(float x) {return 1.0F;}
-    static float sqrtf(float x) {return 1.0F;}
-    static double sqrt(double x) {return 1.0;}
-    static float __fsqrt_rd(float x) {return 1.0F;}
-    static float __fsqrt_rn(float x) {return 1.0F;}
-    static float __fsqrt_ru(float x) {return 1.0F;}
-    static float __fsqrt_rz(float x) {return 1.0F;}
-    static double __fsqrt_rd(double x) {return 1.0;}
-    static double __fsqrt_rn(double x) {return 1.0;}
-    static double __fsqrt_ru(double x) {return 1.0;}
-    static double __fsqrt_rz(double x) {return 1.0;}
+static float sqrt(float x) {return 1.0F;}
+static float sqrtf(float x) {return 1.0F;}
+static double sqrt(double x) {return 1.0;}
+static float __fsqrt_rd(float x) {return 1.0F;}
+static float __fsqrt_rn(float x) {return 1.0F;}
+static float __fsqrt_ru(float x) {return 1.0F;}
+static float __fsqrt_rz(float x) {return 1.0F;}
+static double __fsqrt_rd(double x) {return 1.0;}
+static double __fsqrt_rn(double x) {return 1.0;}
+static double __fsqrt_ru(double x) {return 1.0;}
+static double __fsqrt_rz(double x) {return 1.0;}
 
-    static <T> T atomicAdd(T address, T val) {return null;}
-    static <T> T atomicSub(T address, T val) {return null;}
-    static <T> T atomicExch(T address, T val) {return null;}
-    static <T> T atomicMin(T address, T val) {return null;}
-    static <T> T atomicMax(T address, T val) {return null;}
-    static <T> T atomicInc(T address, T val) {return null;}
-    static <T> T atomicDec(T address, T val) {return null;}
-    static <T> T atomicCAS(T address, T compare,T val) {return null;}
-    static <T> T atomicAnd(T address, T val) {return null;}
-    static <T> T atomicOr(T address, T val) {return null;}
-    static <T> T atomicXor(T address, T val) {return null;}
+static <T> T atomicAdd(T address, T val) {return null;}
+static <T> T atomicSub(T address, T val) {return null;}
+static <T> T atomicExch(T address, T val) {return null;}
+static <T> T atomicMin(T address, T val) {return null;}
+static <T> T atomicMax(T address, T val) {return null;}
+static <T> T atomicInc(T address, T val) {return null;}
+static <T> T atomicDec(T address, T val) {return null;}
+static <T> T atomicCAS(T address, T compare,T val) {return null;}
+static <T> T atomicAnd(T address, T val) {return null;}
+static <T> T atomicOr(T address, T val) {return null;}
+static <T> T atomicXor(T address, T val) {return null;}
 
-    static cudaError_t cudaMemcpy(final String symbol, final String src, int count,String fromto){return null;}
-    static cudaError_t cudaMemcpyToSymbol(final String symbol, final String src, int count){return null;}
-    static cudaError_t cudaMemcpyFromSymbol(final String src,final String symbol,int count){return null;}
-    static void __syncthreads(){}//线程同步
-    static void __syncwarp(){}//线程束同步
+static cudaError_t cudaMemcpy(final String symbol, final String src, int count,String fromto){return null;}
+static cudaError_t cudaMemcpyToSymbol(final String symbol, final String src, int count){return null;}
+static cudaError_t cudaMemcpyFromSymbol(final String src,final String symbol,int count){return null;}
+static void __syncthreads(){}//线程同步
+static void __syncwarp(){}//线程束同步
 
-    /**
-     * 运行时API函数
-     */
-    static void cudaDeviceSynchronize() {};
-    static void cudaSetDevice(int id) {}
-    static void cudaGetDeviceProperties(cudaDeviceProp pop,int id) {};
-    /**
-     * 线程数
-     * @param mask
-     * @param predicate
-     * @return
-     */
+/**
+ * 运行时API函数
+ */
+static void cudaDeviceSynchronize() {};
+static void cudaSetDevice(int id) {}
+static void cudaGetDeviceProperties(cudaDeviceProp pop,int id) {};
+/**
+ * 线程数
+ * @param mask
+ * @param predicate
+ * @return
+ */
 
 
-    static int __any_sync(unsigned mask,int predicate){return 0;};
-    static int __all_sync(unsigned mask,int predicate){return 0;};
-    static int __any_sync(String mask,int predicate){return 0;};
-    static int __all_sync(String mask,int predicate){return 0;};
-    static unsigned __ballot_sync(String mask, int predicate){return null;};
-    static unsigned __ballot_sync(String mask,boolean pre){return null;};
+static int __any_sync(unsigned mask,int predicate){return 0;};
+static int __all_sync(unsigned mask,int predicate){return 0;};
+static int __any_sync(String mask,int predicate){return 0;};
+static int __all_sync(String mask,int predicate){return 0;};
+static unsigned __ballot_sync(String mask, int predicate){return null;};
+static unsigned __ballot_sync(String mask,boolean pre){return null;};
 
-    static <T> T __shfl_sync(String mask, T v, int srcLane,int w){return null;};
-    static <T> T __shfl_up_sync(String mask, T v, int srcLane,int w){return null;};
-    static <T> T __shfl_down_sync(String mask, T v, int srcLane,int w){return null;};
-    static <T> T __shfl_xor_sync(String mask, T v, int srcLane,int w){return null;};
-    static <T> T __shfl_sync(String mask, T v, int srcLane){return null;};
-    static <T> T __shfl_up_sync(String mask, T v, int srcLane){return null;};
-    static <T> T __shfl_down_sync(String mask, T v, int srcLane){return null;};
-    static <T> T __shfl_xor_sync(String mask, T v, int srcLane){return null;};
+static <T> T __shfl_sync(String mask, T v, int srcLane,int w){return null;};
+static <T> T __shfl_up_sync(String mask, T v, int srcLane,int w){return null;};
+static <T> T __shfl_down_sync(String mask, T v, int srcLane,int w){return null;};
+static <T> T __shfl_xor_sync(String mask, T v, int srcLane,int w){return null;};
+static <T> T __shfl_sync(String mask, T v, int srcLane){return null;};
+static <T> T __shfl_up_sync(String mask, T v, int srcLane){return null;};
+static <T> T __shfl_down_sync(String mask, T v, int srcLane){return null;};
+static <T> T __shfl_xor_sync(String mask, T v, int srcLane){return null;};
 
-    static int sizeof(String s) {return 1;}
-    static int atoi(String c) {return 1;};
-    static long atol(String c) {return 1;};
-    static void printf(String format,Object... argv) {};
-    static void print(String format,Object... argv) {};
-    static <T> T __ldg(T j) {return null;};
+static int sizeof(String s) {return 1;}
+static int atoi(String c) {return 1;};
+static long atol(String c) {return 1;};
+static void printf(String format,Object... argv) {};
+static void print(String format,Object... argv) {};
+static <T> T __ldg(T j) {return null;};
 
-    static int this_thread_block() {
+static int this_thread_block() {
         return 1;
-    }
-    static thread_group tiled_partition(thread_block a,int b) {
+        }
+static thread_group tiled_partition(thread_block a,int b) {
         return new thread_group();
-    }
-    static thread_group tiled_partition(thread_group a,int b) {
+        }
+static thread_group tiled_partition(thread_group a,int b) {
         return new thread_group();
-    }
-    static thread_block_tile[] tiled_partition(int b) {
+        }
+static thread_block_tile[] tiled_partition(int b) {
         return new thread_block_tile[]{new thread_block_tile()};
-    }
-    void main();//主函数
+        }
+        void main();//主函数
 ```
 
 # 更新日志:
 
+### v1.2023.0422.06
+- 支持使用动态共享内存
+- 部分支持使用curand标准库
+- 修复了指针输出的漏洞
+- 优化了输出和转义
+- 支持使用cuda流来加速程序
 ### v1.2023.0407.05
 - 指针内存(包括显存)分配问题修复
 - 支持编写使用多个核函数
