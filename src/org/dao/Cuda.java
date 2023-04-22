@@ -9,17 +9,23 @@ public class Cuda {
     private String parameter;
     private static boolean cnRAND = false;
     private static Map<Integer,String> kernelmap = new TreeMap<>();
+    private static final Map<Integer,String> devicemap = new TreeMap<>();
     private static Map<Integer,String> glovarmap = new TreeMap<>();
     private static Map<Integer,String> afterkernelmap = new TreeMap<>();
     private static Map<Integer,String> main = new TreeMap<>();
     private static Map<String,String> Memorymap = new IdentityHashMap<>();
     private static boolean flag = true;
+    private static boolean dflag = true;
     private static String filepath = "\\AstralPathCuda\\";
     public int create(File file, boolean delete) throws ClassNotFoundException, IOException {
         BufferedReader br = new BufferedReader(new FileReader(file));
         
         String[] gpurun = new String[1];
         String[] canshu = new String[1];
+
+        String[] dgpurun = new String[1];
+        String[] dcanshu = new String[1];
+        String[] dreturn = new String[1];
         String contentLine = br.readLine();
         for (int x = 0 ;contentLine != null; x ++) {
             System.out.println(contentLine);
@@ -27,8 +33,25 @@ public class Cuda {
                 cnRAND = true;
             }
             if(contentLine.contains(" __device__")) {
-                System.out.println("全局内存:" + contentLine);
-                Memorymap.put(contentLine.substring(contentLine.indexOf("public ") + 7,contentLine.indexOf("_") -1),contentLine.substring(contentLine.indexOf("__device__")));
+                if (contentLine.contains("(")) {
+                    dgpurun[dgpurun.length - 1] = "__device__" + contentLine.substring(contentLine.indexOf("__device__") + 10,contentLine.lastIndexOf(" {"));
+                    dcanshu[dcanshu.length - 1] = contentLine.substring(contentLine.indexOf("("),contentLine.lastIndexOf(")"));
+                    dreturn[dreturn.length - 1] = contentLine.substring(contentLine.indexOf("public"),contentLine.lastIndexOf("__device__"));
+
+                    for (int y = 0 ;dflag; y ++) {
+                        devicemap.put(y,contentLine);
+                        contentLine = br.readLine();
+                        System.out.println("-" + contentLine);
+                        if(contentLine.contains("End")) {
+                            devicemap.put(y + 1,"}");
+                            break;
+                        }
+                    }
+                    dflag = true;
+                }else {
+                    System.out.println("全局内存:" + contentLine);
+                    Memorymap.put(contentLine.substring(contentLine.indexOf("public ") + 7, contentLine.indexOf("_") - 1), contentLine.substring(contentLine.indexOf("__device__")));
+                }
             }
             if (contentLine.contains("__global__")) {
                 gpurun[gpurun.length - 1] = contentLine.substring(contentLine.indexOf("__global__") + 10,contentLine.lastIndexOf(" {"));
@@ -104,7 +127,7 @@ public class Cuda {
             if (cnRAND) {
                 pu.println("#include<curand.h>");
                 this.parameter = this.parameter + " -lcurand";
-                System.out.printf("您使用了curand标准库，请自己将使用的文件添加进项目根目录(编码时已自动添加#include信息)");
+                System.out.print("您使用了curand标准库，请自己将使用的文件添加进项目根目录(编码时已自动添加#include信息)");
             }
 
 
@@ -119,6 +142,19 @@ public class Cuda {
                         pu.println(java2cuda(kernelmap.get(y)));
                     }
                 }
+            }
+            //以上是变量部分
+            try {
+                if (a) {
+                    for (int x = 0; x < gpurun.length;x++) {
+                        pu.println("__device__ " + dreturn[x].replaceAll("public ","") + java2cuda(dgpurun[x] + "(GLOBAL)") + " {");
+                        for (int y = 1; y < devicemap.size(); y++ ) {
+                            pu.println(java2cuda(devicemap.get(y)));
+                        }
+                    }
+                }
+            }catch (Exception e) {
+                System.out.println("未使用device设备函数");
             }
 
 
@@ -145,16 +181,25 @@ public class Cuda {
         return 1;
     }
     public static String java2cuda(String java) {
+        /**
+        if (java.contains("__device__")) {
+            String t[] = java.split("__device__");
+            if((t[1].indexOf("[") - t[1].indexOf("(")) > 0) {
+
+            }else {
+                java = java.replaceAll("__device__","");
+            }
+        }*/
         java = java.replaceAll("__device__","");
         if(java.contains("__global__")) {
             if (java.contains("tags:")) {
-                String t[] = java.split("\\(");
-                String t2[] = java.split("<<<");
+                String[] t = java.split("\\(");
+                String[] t2 = java.split("<<<");
                 t2[1] = t2[1].substring(0,t2[1].indexOf(">>>"));
                 java = t[0] + "<<<" + t2[1] + ">>>(" +t[1];
                 java = java.replaceAll("__global__", "").replaceAll("\\$", "");
             } else {
-                String t[] = java.split("\\(");
+                String[] t = java.split("\\(");
                 java = t[0] + "<<<grid_size,block_size>>>(" + t[1];
                 java = java.replaceAll("__global__", "").replaceAll("\\$", "");
             }
@@ -172,41 +217,41 @@ public class Cuda {
             java = java.replaceAll("\"","");
         }
         if(java.contains("atomic")) {
-            String t[] = java.split("atomic");
-            String t2[] = t[1].split("\\(");
+            String[] t = java.split("atomic");
+            String[] t2 = t[1].split("\\(");
             java = t[0] + "atomic" + t2[0] + "(&" + t2[1];
         }
         if(java.contains("ldg")) {
-            String t[] = java.split("ldg");
-            String t2[] = t[1].split("\\(");
+            String[] t = java.split("ldg");
+            String[] t2 = t[1].split("\\(");
             java = t[0] + "ldg" + t2[0] + "(&" + t2[1];
         }
         if(java.contains("cudaStreamCreate")) {
-            String t[] = java.split("cudaStreamCreate");
-            String t2[] = t[1].split("\\(");
+            String[] t = java.split("cudaStreamCreate");
+            String[] t2 = t[1].split("\\(");
             java = t[0] + "cudaStreamCreate" + t2[0] + "(&" + t2[1];
         }
         if(java.contains("cudaGetSymbolAddress")) {
-            String t[] = java.split("cudaGetSymbolAddress");
-            String t2[] = t[1].split("\\(");
+            String[] t = java.split("cudaGetSymbolAddress");
+            String[] t2 = t[1].split("\\(");
             java = t[0] + "cudaGetSymbolAddress" + t2[0] + "((void**)&" + t2[1];
         }
         if(java.contains("curandCreateGenerator")) {
-            String t[] = java.split("curandCreateGenerator");
-            String t2[] = t[1].split("\\(");
+            String[] t = java.split("curandCreateGenerator");
+            String[] t2 = t[1].split("\\(");
             java = t[0] + "curandCreateGenerator" + t2[0] + "(&" + t2[1];
         }
         if(java.contains("shared") ) {
             if (java.contains("= {")) {
                 if (java.contains("extern")) {
                     java = java.replaceAll("\\[]", "");
-                    String t[] = java.split("\\s+");
+                    String[] t = java.split("\\s+");
                     java = "extern __shared__" + " " + t[1] + " " + t[2] + "[];";
                 } else {
                     String temp = java.substring(java.indexOf("length:") + 7);
                     temp = temp.replaceAll("length", "");
                     java = java.replaceAll("\\[]", "");
-                    String t[] = java.split("\\s+");
+                    String[] t = java.split("\\s+");
                     java = "__shared__" + " " + t[1] + " " + t[2] + "[" + temp + "];";
                 }
             }
@@ -220,8 +265,8 @@ public class Cuda {
                     String temp = java.substring(java.indexOf("length:"));
                     temp= temp.replaceAll("length:","");
                     java =java.replaceAll("\\[]","");
-                    String t[] = java.split("\\s+");
-                    String t2[] = java.split("=");
+                    String[] t = java.split("\\s+");
+                    String[] t2 = java.split("=");
                     try {
                         java = t[1] + " " +t[2] + "[" + temp + "]" + " = " + t2[1];
                     } catch (Exception e) {
@@ -229,13 +274,13 @@ public class Cuda {
 
                     System.out.println("数组:" + java);
                 } else {
-                    String ts[] = java.split(";");
+                    String[] ts = java.split(";");
                     java = ts[0] + " = {}" + ";" + ts[1];
                     String temp = java.substring(java.indexOf("length:"));
                     temp= temp.replaceAll("length:","");
                     java =java.replaceAll("\\[]","");
-                    String t[] = java.split("\\s+");
-                    String t2[] = java.split("=");
+                    String[] t = java.split("\\s+");
+                    String[] t2 = java.split("=");
                     try {
                         java = t[1] + " " +t[2] + "[" + temp + "]" + " = " + t2[1];
                         java = java.replaceAll(" = \\{}","");
@@ -265,7 +310,7 @@ public class Cuda {
         }
 
         if(java.contains("cudaMalloc")) {
-            String t[] = java.split("cudaMalloc\\(");
+            String[] t = java.split("cudaMalloc\\(");
             java = t[0] + "cudaMalloc((void **)&" + t[1].replaceFirst("\\$","");
             java = java.replaceAll("\"","");
         }
@@ -277,13 +322,13 @@ public class Cuda {
 
             java = java.replaceFirst("\\[]","");
             if (java.contains("[]")) {
-                String a[] = java.split("\\[]");
+                String[] a = java.split("\\[]");
                 java = a[0] + "$" + a[1];
                 if (java.contains("(GLOBAL)")) {java = a[0] + a[1];}
             }
             System.err.println(java);
             if (java.contains("cudaMalloc")) {
-                String t[] = java.split("cudaMalloc\\(");
+                String[] t = java.split("cudaMalloc\\(");
                 java = t[0] + "cudaMalloc((void **)&" + t[1].replaceFirst("\\$","");
                 java = java.replaceAll("\"","");
             } else if(java.contains("__global__")) {
@@ -297,33 +342,33 @@ public class Cuda {
                 java = java.replaceAll("\\$","");
             }
             if (java.contains(" = {")) {
-                String temp[] = java.split(" = \\{");
+                String[] temp = java.split(" = \\{");
                 java = temp[0] + ";";
             }
             java = java.replaceAll("\\$","*");
         }
         if (java.contains("dim3")) {
-            String t[] = java.split("=");
-            String t2[] = t[1].split("new dim3");
+            String[] t = java.split("=");
+            String[] t2 = t[1].split("new dim3");
             java = t[0] + t2[1];
         }
         if (java.contains("new cudaStream_t")) {
-            String t[] = java.split("=");
-            String t2[] = t[1].split("new cudaStream_t");
+            String[] t = java.split("=");
+            String[] t2 = t[1].split("new cudaStream_t");
             java = t[0] + t2[1].replaceFirst("\\(\\)","");
         }
         if (java.contains("new cudaDeviceProp")) {
-            String t[] = java.split("=");
-            String t2[] = t[1].split("new cudaDeviceProp");
+            String[] t = java.split("=");
+            String[] t2 = t[1].split("new cudaDeviceProp");
             java = t[0] + t2[1].replaceFirst("\\(\\)","");
         }
         if (java.contains("curandGenerator_t")) {
-            String t[] = java.split("=");
-            String t2[] = t[1].split("new curandGenerator_t");
+            String[] t = java.split("=");
+            String[] t2 = t[1].split("new curandGenerator_t");
             java = t[0] + t2[1].replaceFirst("\\(\\)","");
         }
         if (java.contains("cudaGetDeviceProperties(")) {
-            String a[] = java.split("cudaGetDeviceProperties\\(");
+            String[] a = java.split("cudaGetDeviceProperties\\(");
             java = a[0] +"cudaGetDeviceProperties(&" + a[1];
         }
         java = java.replaceAll("\\(GLOBAL\\)","");
@@ -389,7 +434,7 @@ public class Cuda {
             int exitValue = pr.waitFor();
             System.out.println("Exited with error code "+exitValue);
         } catch (IOException e) {
-            System.out.println(e.toString());
+            System.out.println(e);
             e.printStackTrace();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -415,7 +460,7 @@ public class Cuda {
             int exitValue = pr.waitFor();
             System.out.println("Exited with error code "+exitValue);
         } catch (IOException e) {
-            System.out.println(e.toString());
+            System.out.println(e);
             e.printStackTrace();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -514,7 +559,7 @@ public class Cuda {
                 a = 1;
             }
         } catch (IOException e) {
-            System.out.println(e.toString());
+            System.out.println(e);
             e.printStackTrace();
             a = 0;
         } catch (InterruptedException e) {

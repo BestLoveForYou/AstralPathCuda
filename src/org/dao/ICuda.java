@@ -1,8 +1,7 @@
 package org.dao;
 
 import org.dao.base.*;
-import org.dao.cuRAND.curandGenerator_t;
-import org.dao.cuRAND.curndRngType_t;
+import org.dao.cuRAND.*;
 
 public interface ICuda {
     String cudaMemcpyDeviceToHost = null;
@@ -71,11 +70,54 @@ public interface ICuda {
     /**
      * 随机数
      */
-    static curndRngType_t CURAND_RNG_PSEUDO_DEFAULT = new curndRngType_t();
-    static curndRngType_t CURAND_RNG_PSEUDO_XORWOW = new curndRngType_t();
-    static curndRngType_t CURAND_RNG_PSEUDO_MT19937 = new curndRngType_t();
+    curndRngType_t CURAND_RNG_PSEUDO_DEFAULT = new curndRngType_t();
+    curndRngType_t CURAND_RNG_PSEUDO_XORWOW = new curndRngType_t();
+    curndRngType_t CURAND_RNG_PSEUDO_MPG19937 = new curndRngType_t();
+    curndRngType_t CURAND_RNG_PSEUDO_MRG32K3A = new curndRngType_t();
+    curndRngType_t CURAND_RNG_PSEUDO_PHILOX4_32_10 = new curndRngType_t();
+    curndRngType_t CURAND_RNG_PSEUDO_MT19937 = new curndRngType_t();
+    //上面是伪随机数生成
+    //下面是拟随机数数生成
+    curndRngType_t CURAND_RNG_QUASI_SOBOL32 = new curndRngType_t();
+    curndRngType_t CURAND_RNG_QUASI_SCRAMBLED_SOBOL32 = new curndRngType_t();
+    curndRngType_t CURAND_RNG_QUASI_SOBOL64 = new curndRngType_t();
+    curndRngType_t CURAND_RNG_QUASI_SCRAMBLED_SOBOL64 = new curndRngType_t();
+
+
     static void curandCreateGenerator(curandGenerator_t c, curndRngType_t rng_type) {}//c是指针
-    static void curandSetPseudoRandomGeneratorSeed(curandGenerator_t c,long seed) {}
+    static curandStatus_t curandSetPseudoRandomGeneratorSeed(curandGenerator_t c,long seed) {return null;}
+    static curandStatus_t curandSetPseudoRandomGeneratorSeed(curandGenerator_t generator,String seed) {
+        return null;
+    }
+    static curandStatus_t curandSetPseudoRandomGeneratorSeed(curandGenerator_t generator,unsigned seed) {
+        return null;
+    }
+    static curandStatus_t curandSetQuasiRandomGeneratorDimensions(curandGenerator_t generator, int num_dimensions) {
+        return null;
+    }
+    static curandStatus_t curandSetQuasiRandomGeneratorDimensions(curandGenerator_t generator, unsigned num_dimensions) {
+        return null;
+    }
+    static curandStatus_t curandSetGeneratorOffset(curandGenerator_t generator, unsigned offset) {
+        return null;
+    }
+    static curandStatus_t curandSetGeneratorOffset(curandGenerator_t generator, long offset) {
+        return null;
+    }
+    curandOrdering_t CURAND_ORDERING_PSEUDO_DEFAULT = null;
+    curandOrdering_t CURAND_ORDERING_PSEUDO_LEGACY = null;
+    curandOrdering_t CURAND_ORDERING_PSEUDO_BEST = null;
+    curandOrdering_t CURAND_ORDERING_PSEUDO_SEEDED = null;
+    curandOrdering_t CURAND_ORDERING_QUASI_DEFAULT = null;
+
+    static curandStatus_t curandSetGeneratorOrdering(curandGenerator_t generator, curandOrdering_t order) {
+        return null;
+    }
+    static curandStatus_t curandSetStream(curandGenerator_t generator, cudaStream_t stream) {
+        return null;
+    }
+
+
     static <T> void curandGenerateUniformDouble(curandGenerator_t c, T memory, int N) {}
     static <T> void curandGenerateNormalDouble(curandGenerator_t generator, T $gX, int N,double a,double b) {}
     static <T> void curandGenerateNormalDouble(curandGenerator_t generator, double[] $gX, int N,double a,double b) {}
@@ -83,11 +125,20 @@ public interface ICuda {
     static <T> void curandGenerateNormalInt(curandGenerator_t generator, int[] $gX, int N,int a,int b) {}
     static <T> void curandGenerateNormalLong(curandGenerator_t generator, long[] $gX, int N,long a,long b) {}
     /**
+     * 下面是Device使用的API;上面是Host使用的API
+     */
+    static <T> void curand_init(T seed, T sequence, T offset, curandState_t state) {}
+
+    static int curand (curandState_t state) {return 0;}
+
+    /**
      * 运行时API函数
      */
-    static void cudaDeviceSynchronize() {};
+    static void cudaDeviceSynchronize() {}
+
     static void cudaSetDevice(int id) {}
-    static void cudaGetDeviceProperties(cudaDeviceProp pop,int id) {};
+    static void cudaGetDeviceProperties(cudaDeviceProp pop,int id) {}
+
     static <T> void cudaGetSymbolAddress(T devPtr,T symbol) {}
 
     /**
@@ -103,28 +154,44 @@ public interface ICuda {
      * @param predicate
      * @return
      */
-    static int __any_sync(unsigned mask,int predicate){return 0;};
-    static int __all_sync(unsigned mask,int predicate){return 0;};
-    static int __any_sync(String mask,int predicate){return 0;};
-    static int __all_sync(String mask,int predicate){return 0;};
-    static unsigned __ballot_sync(String mask, int predicate){return null;};
-    static unsigned __ballot_sync(String mask,boolean pre){return null;};
+    static int __any_sync(unsigned mask,int predicate){return 0;}
 
-    static <T> T __shfl_sync(String mask, T v, int srcLane,int w){return null;};
-    static <T> T __shfl_up_sync(String mask, T v, int srcLane,int w){return null;};
-    static <T> T __shfl_down_sync(String mask, T v, int srcLane,int w){return null;};
-    static <T> T __shfl_xor_sync(String mask, T v, int srcLane,int w){return null;};
-    static <T> T __shfl_sync(String mask, T v, int srcLane){return null;};
-    static <T> T __shfl_up_sync(String mask, T v, int srcLane){return null;};
-    static <T> T __shfl_down_sync(String mask, T v, int srcLane){return null;};
-    static <T> T __shfl_xor_sync(String mask, T v, int srcLane){return null;};
+    static int __all_sync(unsigned mask,int predicate){return 0;}
+
+    static int __any_sync(String mask,int predicate){return 0;}
+
+    static int __all_sync(String mask,int predicate){return 0;}
+
+    static unsigned __ballot_sync(String mask, int predicate){return null;}
+
+    static unsigned __ballot_sync(String mask,boolean pre){return null;}
+
+    static <T> T __shfl_sync(String mask, T v, int srcLane,int w){return null;}
+
+    static <T> T __shfl_up_sync(String mask, T v, int srcLane,int w){return null;}
+
+    static <T> T __shfl_down_sync(String mask, T v, int srcLane,int w){return null;}
+
+    static <T> T __shfl_xor_sync(String mask, T v, int srcLane,int w){return null;}
+
+    static <T> T __shfl_sync(String mask, T v, int srcLane){return null;}
+
+    static <T> T __shfl_up_sync(String mask, T v, int srcLane){return null;}
+
+    static <T> T __shfl_down_sync(String mask, T v, int srcLane){return null;}
+
+    static <T> T __shfl_xor_sync(String mask, T v, int srcLane){return null;}
 
     static int sizeof(String s) {return 1;}
-    static int atoi(String c) {return 1;};
-    static long atol(String c) {return 1;};
-    static void printf(String format,Object... argv) {};
-    static void print(String format,Object... argv) {};
-    static <T> T __ldg(T j) {return null;};
+    static int atoi(String c) {return 1;}
+
+    static long atol(String c) {return 1;}
+
+    static void printf(String format,Object... argv) {}
+
+    static void print(String format,Object... argv) {}
+
+    static <T> T __ldg(T j) {return null;}
 
     static int this_thread_block() {
         return 1;

@@ -16,14 +16,14 @@ public class Main {
         System.out.println("初始化完成!");
 
         int a = 0;
-        String f = "D:\\idea_astralpathtalk\\AstralPathCuda\\src\\org\\test\\ReduceSHFL.java";
+        String f = "D:\\idea_astralpathtalk\\AstralPathCuda\\src\\org\\test\\TestNew.java";
         if (a == 0) {
             Cuda c= new Cuda();
             c.setParameter("-arch=sm_60");
             c.create(new File(f),false);
         } else {
             Exe e = new Exe();
-            System.out.println(e.runexe("D:\\idea_astralpathtalk\\AstralPathCuda\\astralpathcuda.exe"));
+            System.out.println(Exe.runexe("D:\\idea_astralpathtalk\\AstralPathCuda\\astralpathcuda.exe"));
         }
 
 

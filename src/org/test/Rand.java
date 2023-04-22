@@ -8,13 +8,13 @@ public class Rand implements ICuda {
     @Override
     public void main() {
         curandGenerator_t generator = new curandGenerator_t();
-        ICuda.curandCreateGenerator(generator, CURAND_RNG_PSEUDO_DEFAULT);
+        ICuda.curandCreateGenerator(generator, CURAND_RNG_QUASI_SOBOL32);
         ICuda.curandSetPseudoRandomGeneratorSeed(generator, 1234);
         int N = 100000;
-        double $g_x[] = {};
+        double[] $g_x = {};
         ICuda.cudaMalloc($g_x, ICuda.sizeof("double") * N);
         ICuda.curandGenerateUniformDouble(generator, $g_x, N);
-        double $x[] = (double[]) ICuda.calloc(N, ICuda.sizeof("double"));
+        double[] $x = ICuda.calloc(N, ICuda.sizeof("double"));
         ICuda.cudaMemcpy("x", "g_x", ICuda.sizeof("double") * N, cudaMemcpyDeviceToHost);
 
         for (int y = 0; y < N ;y ++) {
