@@ -16,7 +16,7 @@ public class Main {
         System.out.println("初始化完成!");
 
         int a = 0;
-        String f = "D:\\idea_astralpathtalk\\AstralPathCuda\\src\\org\\test\\TestNew.java";
+        String f = "D:\\idea_astralpathtalk\\AstralPathCuda\\src\\org\\test\\Rand.java";
         if (a == 0) {
             Cuda c= new Cuda();
             c.setParameter("-arch=sm_60");
@@ -30,6 +30,5 @@ public class Main {
         /*
 
          */
-
     }
 }

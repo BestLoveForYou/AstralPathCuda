@@ -121,9 +121,6 @@ public interface ICuda {
     static <T> void curandGenerateUniformDouble(curandGenerator_t c, T memory, int N) {}
     static <T> void curandGenerateNormalDouble(curandGenerator_t generator, T $gX, int N,double a,double b) {}
     static <T> void curandGenerateNormalDouble(curandGenerator_t generator, double[] $gX, int N,double a,double b) {}
-    static <T> void curandGenerateNormalFloat(curandGenerator_t generator, float[] $gX, int N,float a,float b) {}
-    static <T> void curandGenerateNormalInt(curandGenerator_t generator, int[] $gX, int N,int a,int b) {}
-    static <T> void curandGenerateNormalLong(curandGenerator_t generator, long[] $gX, int N,long a,long b) {}
     /**
      * 下面是Device使用的API;上面是Host使用的API
      */
