@@ -202,9 +202,5 @@ public interface ICuda {
     static thread_block_tile[] tiled_partition(int b) {
         return new thread_block_tile[]{new thread_block_tile()};
     }
-
-
-
-
     void main();//主函数
 }

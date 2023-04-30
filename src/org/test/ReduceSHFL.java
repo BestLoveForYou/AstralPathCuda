@@ -10,7 +10,7 @@ public class ReduceSHFL implements ICuda {
     public void __global__reduce() {
         final int tid = threadIdxx;
         final int bid = blockIdxx;
-        final int n = bid * blockDimx + tid;
+        final int n = tid;
         int[] __shared__s_y = {};//extern
         if (n < N) {
             __shared__s_y[tid] = ICuda.__ldg(__device__d_x[n]);
@@ -36,11 +36,11 @@ public class ReduceSHFL implements ICuda {
         {
             ICuda.atomicAdd(__device__d[0], y);
         }
-    }//End
+    }
 
     @Override
     public void main() {
-        int[] ha = {};//length:N
+        int[] ha = new int[N];
         for(int x = 0; x < N ; ++x) {
             ha[x] = 1;
         }
@@ -55,41 +55,6 @@ public class ReduceSHFL implements ICuda {
 
 
         int device_id = 0;
-
-        ICuda.cudaSetDevice(device_id);
-        cudaDeviceProp prop = new cudaDeviceProp();
-        ICuda.cudaGetDeviceProperties(prop,device_id);
-        ICuda.printf("Device id:                                 %d\n",
-                device_id);
-        ICuda.printf("Device name:                               %s\n",
-                prop.name);
-        ICuda.printf("Compute capability:                        %d.%d\n",
-                prop.major, prop.minor);
-        ICuda.printf("Amount of global memory:                   %g GB\n",
-                prop.totalGlobalMem / (1024.0 * 1024 * 1024));
-        ICuda.printf("Amount of constant memory:                 %g KB\n",
-                prop.totalConstMem  / 1024.0);
-        ICuda.printf("Maximum grid size:                         %d %d %d\n",
-                prop.maxGridSize[0],
-                prop.maxGridSize[1], prop.maxGridSize[2]);
-        ICuda.printf("Maximum block size:                        %d %d %d\n",
-                prop.maxThreadsDim[0], prop.maxThreadsDim[1],
-                prop.maxThreadsDim[2]);
-        ICuda.printf("Number of SMs:                             %d\n",
-                prop.multiProcessorCount);
-        ICuda.printf("Maximum amount of shared memory per block: %g KB\n",
-                prop.sharedMemPerBlock / 1024.0);
-        ICuda.printf("Maximum amount of shared memory per SM:    %g KB\n",
-                prop.sharedMemPerMultiprocessor / 1024.0);
-        ICuda.printf("Maximum number of registers per block:     %d K\n",
-                prop.regsPerBlock / 1024);
-        ICuda.printf("Maximum number of registers per SM:        %d K\n",
-                prop.regsPerMultiprocessor / 1024);
-        ICuda.printf("Maximum number of threads per block:       %d\n",
-                prop.maxThreadsPerBlock);
-        ICuda.printf("Maximum number of threads per SM:          %d\n",
-                prop.maxThreadsPerMultiProcessor);
-        
         ICuda.cudaMemcpyFromSymbol("ha","d",ICuda.sizeof("int")*2);
         System.out.printf("c=%d\n",ha[0]);
     }//End

@@ -1,8 +1,5 @@
-
-@[TOC]
-
 # AstralPathCuda 文档
-2023-04-22 20:57:09 星期六
+2023-04-30 20:25:41 星期日
 
 ## 介绍
 使用GPU完成科学计算不仅能提高计算的稳健性,更能提供一个无与伦比的速度,Java也是一种常用的CPU语言,开源平台为其提供了丰富的环境,但Cuda和Java的混合使用一直都是个麻烦事,毕竟两者本来都不该有交集,但GPU的高并发能力强大无比,CSDN上基本都是Java通过JNI调用CUDA程序,但麻烦无比,而使用JCuda也需要提供核函数的PTX文件,更加麻烦,还增加了开发难度,鉴于此前景,我开始了JavaGPU混合开发辅助包AstralPathCuda(以下简称APC)的编写.
@@ -16,9 +13,10 @@
 
 ## Cuda下载与安装
 [CUDA安装教程（超详细）](https://blog.csdn.net/m0_45447650/article/details/123704930?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522167222191016782427411200%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=167222191016782427411200&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-123704930-null-null.142%5Ev68%5Econtrol,201%5Ev4%5Eadd_ask,213%5Ev2%5Et3_esquery_v2&utm_term=cuda%E5%AE%89%E8%A3%85&spm=1018.2226.3001.4187)
-
+## Github链接
+[点击下载](https://github.com/BestLoveForYou/AstralPathCuda/)
 ## 下载
-[点击下载](http://47.96.154.95:9000/down/nNut6SNaoxkc.jar)
+[点击下载](https://github.com/BestLoveForYou/AstralPathCuda/releases/)
 
 ## 核心
 在Cuda中,一个Cuda程序是由C/C++编写的,而APC使用的语言是Java,所以,或多或少的会有很多语言上的底层差异,对此,我这里的解决方法是```注释辅助+APC自动填充```,在实际编写中使用者会感受到这种方法的快捷和灵活的.
@@ -124,11 +122,17 @@ double[] __shared__s_y = {};//extern
 
 ## 函数
 
-**从java的方法转为c中的函数**,共有2种必不可少,
-- 第一是核函数,是在GPU上跑的函数
-- 第二是main函数,就是主函数
+函数在最后都需要在方法**最后的"}"**后标注**//End**(注释形式)
 
-以上函数在最后都需要在方法**最后的"}"**后标注**//End**(注释形式)
+### 主函数
+```java
+@Override
+public void main() {
+	
+}//End
+```
+主函数是重载ICuda里的方法,必不可少
+最后的下标//End也是不可缺少的
 
 主函数自带2个变量```int argc, char* argv[]```这是启动参数,都可直接使用
 
@@ -178,7 +182,7 @@ public void __global__核函数名() {
 //省略
         }//End
 ```
-**注意**:最后的//End不能省略
+- 在```v1.2023.0422.06```版本之前需要加必须要加//End,在之后无需加了.
 
 ### 设备函数
 ```java
@@ -324,6 +328,8 @@ static <T> void curandGenerateUniformDouble(curandGenerator_t c, T memory, int N
 ```
 
 ~~至于Device上的API,还正在做~~
+
+
 [========]
 
 
@@ -588,99 +594,189 @@ int main(int argc, char* argv[]) {
 
 ```java
 /**
- * 这些是Cuda和C语言提供的部分函数
- */
-/**
- * 这些是Cuda和C语言提供的部分函数
- */
-static <T> T malloc(int t) {return null;}
-static <T> void cudaMalloc(String s, int t) {}
-static void free(Object... o) {}
-static void cudaFree(Object... o) {}
+     * 这些是Cuda和C语言提供的部分函数
+     */
+    static <T> T malloc(int t) {return null;}
+    static <T> void cudaMalloc(T s, int t) {}
+    static <T> T calloc(int n, int size) {return null;}
 
-static float sqrt(float x) {return 1.0F;}
-static float sqrtf(float x) {return 1.0F;}
-static double sqrt(double x) {return 1.0;}
-static float __fsqrt_rd(float x) {return 1.0F;}
-static float __fsqrt_rn(float x) {return 1.0F;}
-static float __fsqrt_ru(float x) {return 1.0F;}
-static float __fsqrt_rz(float x) {return 1.0F;}
-static double __fsqrt_rd(double x) {return 1.0;}
-static double __fsqrt_rn(double x) {return 1.0;}
-static double __fsqrt_ru(double x) {return 1.0;}
-static double __fsqrt_rz(double x) {return 1.0;}
+    static void free(Object... o) {}
+    static void cudaFree(Object... o) {}
 
-static <T> T atomicAdd(T address, T val) {return null;}
-static <T> T atomicSub(T address, T val) {return null;}
-static <T> T atomicExch(T address, T val) {return null;}
-static <T> T atomicMin(T address, T val) {return null;}
-static <T> T atomicMax(T address, T val) {return null;}
-static <T> T atomicInc(T address, T val) {return null;}
-static <T> T atomicDec(T address, T val) {return null;}
-static <T> T atomicCAS(T address, T compare,T val) {return null;}
-static <T> T atomicAnd(T address, T val) {return null;}
-static <T> T atomicOr(T address, T val) {return null;}
-static <T> T atomicXor(T address, T val) {return null;}
+    static float sqrt(float x) {return 1.0F;}
+    static float sqrtf(float x) {return 1.0F;}
+    static double sqrt(double x) {return 1.0;}
+    static float __fsqrt_rd(float x) {return 1.0F;}
+    static float __fsqrt_rn(float x) {return 1.0F;}
+    static float __fsqrt_ru(float x) {return 1.0F;}
+    static float __fsqrt_rz(float x) {return 1.0F;}
+    static double __fsqrt_rd(double x) {return 1.0;}
+    static double __fsqrt_rn(double x) {return 1.0;}
+    static double __fsqrt_ru(double x) {return 1.0;}
+    static double __fsqrt_rz(double x) {return 1.0;}
 
-static cudaError_t cudaMemcpy(final String symbol, final String src, int count,String fromto){return null;}
-static cudaError_t cudaMemcpyToSymbol(final String symbol, final String src, int count){return null;}
-static cudaError_t cudaMemcpyFromSymbol(final String src,final String symbol,int count){return null;}
-static void __syncthreads(){}//线程同步
-static void __syncwarp(){}//线程束同步
+    static <T> T atomicAdd(T address, T val) {return null;}
+    static <T> T atomicSub(T address, T val) {return null;}
+    static <T> T atomicExch(T address, T val) {return null;}
+    static <T> T atomicMin(T address, T val) {return null;}
+    static <T> T atomicMax(T address, T val) {return null;}
+    static <T> T atomicInc(T address, T val) {return null;}
+    static <T> T atomicDec(T address, T val) {return null;}
+    static <T> T atomicCAS(T address, T compare,T val) {return null;}
+    static <T> T atomicAnd(T address, T val) {return null;}
+    static <T> T atomicOr(T address, T val) {return null;}
+    static <T> T atomicXor(T address, T val) {return null;}
 
-/**
- * 运行时API函数
- */
-static void cudaDeviceSynchronize() {};
-static void cudaSetDevice(int id) {}
-static void cudaGetDeviceProperties(cudaDeviceProp pop,int id) {};
-/**
- * 线程数
- * @param mask
- * @param predicate
- * @return
- */
+    static cudaError_t cudaMemcpy(final String symbol, final String src, int count,String fromto){return null;}
+    static cudaError_t cudaMemcpyToSymbol(final String symbol, final String src, int count){return null;}
+    static cudaError_t cudaMemcpyFromSymbol(final String src,final String symbol,int count){return null;}
+    static void __syncthreads(){}//线程同步
+    static void __syncwarp(){}//线程束同步
+
+    /**
+     * 随机数
+     */
+    curndRngType_t CURAND_RNG_PSEUDO_DEFAULT = new curndRngType_t();
+    curndRngType_t CURAND_RNG_PSEUDO_XORWOW = new curndRngType_t();
+    curndRngType_t CURAND_RNG_PSEUDO_MPG19937 = new curndRngType_t();
+    curndRngType_t CURAND_RNG_PSEUDO_MRG32K3A = new curndRngType_t();
+    curndRngType_t CURAND_RNG_PSEUDO_PHILOX4_32_10 = new curndRngType_t();
+    curndRngType_t CURAND_RNG_PSEUDO_MT19937 = new curndRngType_t();
+    //上面是伪随机数生成
+    //下面是拟随机数数生成
+    curndRngType_t CURAND_RNG_QUASI_SOBOL32 = new curndRngType_t();
+    curndRngType_t CURAND_RNG_QUASI_SCRAMBLED_SOBOL32 = new curndRngType_t();
+    curndRngType_t CURAND_RNG_QUASI_SOBOL64 = new curndRngType_t();
+    curndRngType_t CURAND_RNG_QUASI_SCRAMBLED_SOBOL64 = new curndRngType_t();
 
 
-static int __any_sync(unsigned mask,int predicate){return 0;};
-static int __all_sync(unsigned mask,int predicate){return 0;};
-static int __any_sync(String mask,int predicate){return 0;};
-static int __all_sync(String mask,int predicate){return 0;};
-static unsigned __ballot_sync(String mask, int predicate){return null;};
-static unsigned __ballot_sync(String mask,boolean pre){return null;};
+    static void curandCreateGenerator(curandGenerator_t c, curndRngType_t rng_type) {}//c是指针
+    static curandStatus_t curandSetPseudoRandomGeneratorSeed(curandGenerator_t c,long seed) {return null;}
+    static curandStatus_t curandSetPseudoRandomGeneratorSeed(curandGenerator_t generator,String seed) {
+        return null;
+    }
+    static curandStatus_t curandSetPseudoRandomGeneratorSeed(curandGenerator_t generator,unsigned seed) {
+        return null;
+    }
+    static curandStatus_t curandSetQuasiRandomGeneratorDimensions(curandGenerator_t generator, int num_dimensions) {
+        return null;
+    }
+    static curandStatus_t curandSetQuasiRandomGeneratorDimensions(curandGenerator_t generator, unsigned num_dimensions) {
+        return null;
+    }
+    static curandStatus_t curandSetGeneratorOffset(curandGenerator_t generator, unsigned offset) {
+        return null;
+    }
+    static curandStatus_t curandSetGeneratorOffset(curandGenerator_t generator, long offset) {
+        return null;
+    }
+    curandOrdering_t CURAND_ORDERING_PSEUDO_DEFAULT = null;
+    curandOrdering_t CURAND_ORDERING_PSEUDO_LEGACY = null;
+    curandOrdering_t CURAND_ORDERING_PSEUDO_BEST = null;
+    curandOrdering_t CURAND_ORDERING_PSEUDO_SEEDED = null;
+    curandOrdering_t CURAND_ORDERING_QUASI_DEFAULT = null;
 
-static <T> T __shfl_sync(String mask, T v, int srcLane,int w){return null;};
-static <T> T __shfl_up_sync(String mask, T v, int srcLane,int w){return null;};
-static <T> T __shfl_down_sync(String mask, T v, int srcLane,int w){return null;};
-static <T> T __shfl_xor_sync(String mask, T v, int srcLane,int w){return null;};
-static <T> T __shfl_sync(String mask, T v, int srcLane){return null;};
-static <T> T __shfl_up_sync(String mask, T v, int srcLane){return null;};
-static <T> T __shfl_down_sync(String mask, T v, int srcLane){return null;};
-static <T> T __shfl_xor_sync(String mask, T v, int srcLane){return null;};
+    static curandStatus_t curandSetGeneratorOrdering(curandGenerator_t generator, curandOrdering_t order) {
+        return null;
+    }
+    static curandStatus_t curandSetStream(curandGenerator_t generator, cudaStream_t stream) {
+        return null;
+    }
 
-static int sizeof(String s) {return 1;}
-static int atoi(String c) {return 1;};
-static long atol(String c) {return 1;};
-static void printf(String format,Object... argv) {};
-static void print(String format,Object... argv) {};
-static <T> T __ldg(T j) {return null;};
 
-static int this_thread_block() {
+    static <T> void curandGenerateUniformDouble(curandGenerator_t c, T memory, int N) {}
+    static <T> void curandGenerateNormalDouble(curandGenerator_t generator, T $gX, int N,double a,double b) {}
+    static <T> void curandGenerateNormalDouble(curandGenerator_t generator, double[] $gX, int N,double a,double b) {}
+    /**
+     * 下面是Device使用的API;上面是Host使用的API
+     */
+    static <T> void curand_init(T seed, T sequence, T offset, curandState_t state) {}
+
+    static int curand (curandState_t state) {return 0;}
+
+    /**
+     * 运行时API函数
+     */
+    static void cudaDeviceSynchronize() {}
+
+    static void cudaSetDevice(int id) {}
+    static void cudaGetDeviceProperties(cudaDeviceProp pop,int id) {}
+
+    static <T> void cudaGetSymbolAddress(T devPtr,T symbol) {}
+
+    /**
+     * 流
+     */
+    static void cudaStreamCreate(cudaStream_t c) {}
+    static void cudaStreamDestroy(cudaStream_t c) {}
+    static cudaError_t cudaStreamSynchronize(cudaStream_t c) {return new cudaError_t();}
+    static cudaError_t cudaStreamQuery(cudaStream_t c) {return new cudaError_t();}
+    /**
+     * 线程数
+     * @param mask
+     * @param predicate
+     * @return
+     */
+    static int __any_sync(unsigned mask,int predicate){return 0;}
+
+    static int __all_sync(unsigned mask,int predicate){return 0;}
+
+    static int __any_sync(String mask,int predicate){return 0;}
+
+    static int __all_sync(String mask,int predicate){return 0;}
+
+    static unsigned __ballot_sync(String mask, int predicate){return null;}
+
+    static unsigned __ballot_sync(String mask,boolean pre){return null;}
+
+    static <T> T __shfl_sync(String mask, T v, int srcLane,int w){return null;}
+
+    static <T> T __shfl_up_sync(String mask, T v, int srcLane,int w){return null;}
+
+    static <T> T __shfl_down_sync(String mask, T v, int srcLane,int w){return null;}
+
+    static <T> T __shfl_xor_sync(String mask, T v, int srcLane,int w){return null;}
+
+    static <T> T __shfl_sync(String mask, T v, int srcLane){return null;}
+
+    static <T> T __shfl_up_sync(String mask, T v, int srcLane){return null;}
+
+    static <T> T __shfl_down_sync(String mask, T v, int srcLane){return null;}
+
+    static <T> T __shfl_xor_sync(String mask, T v, int srcLane){return null;}
+
+    static int sizeof(String s) {return 1;}
+    static int atoi(String c) {return 1;}
+
+    static long atol(String c) {return 1;}
+
+    static void printf(String format,Object... argv) {}
+
+    static void print(String format,Object... argv) {}
+
+    static <T> T __ldg(T j) {return null;}
+
+    static int this_thread_block() {
         return 1;
-        }
-static thread_group tiled_partition(thread_block a,int b) {
+    }
+    static thread_group tiled_partition(thread_block a,int b) {
         return new thread_group();
-        }
-static thread_group tiled_partition(thread_group a,int b) {
+    }
+    static thread_group tiled_partition(thread_group a,int b) {
         return new thread_group();
-        }
-static thread_block_tile[] tiled_partition(int b) {
+    }
+    static thread_block_tile[] tiled_partition(int b) {
         return new thread_block_tile[]{new thread_block_tile()};
-        }
-        void main();//主函数
-```
+   
+    void main();//主函数
 
 # 更新日志:
+
+### v1.2023.0430.07
+- 此版本是一个过渡版本!
+- 支持核函数无需使用//End标签完成读取
+- 修复了curand库的部分Bug
+- 支持了new创建数组的方式
 
 ### v1.2023.0422.06
 - 支持使用动态共享内存

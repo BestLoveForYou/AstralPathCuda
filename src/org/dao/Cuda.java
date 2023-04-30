@@ -33,17 +33,31 @@ public class Cuda {
                 cnRAND = true;
             }
             if(contentLine.contains(" __device__")) {
+
                 if (contentLine.contains("(")) {
                     dgpurun[dgpurun.length - 1] = "__device__" + contentLine.substring(contentLine.indexOf("__device__") + 10,contentLine.lastIndexOf(" {"));
                     dcanshu[dcanshu.length - 1] = contentLine.substring(contentLine.indexOf("("),contentLine.lastIndexOf(")"));
                     dreturn[dreturn.length - 1] = contentLine.substring(contentLine.indexOf("public"),contentLine.lastIndexOf("__device__"));
 
                     for (int y = 0 ;dflag; y ++) {
+                        int numb = 0;
+                        if (contentLine.contains("{")) {
+                            if (contentLine.contains("\\{")) {
+                            }else {
+                                numb++;
+                            }
+                        }
+                        if (contentLine.contains("}")) {
+                            if (contentLine.contains("\\}")) {
+                            }else {
+                                numb--;
+                                System.out.println(contentLine + "|" + numb);
+                            }
+                        }
                         devicemap.put(y,contentLine);
                         contentLine = br.readLine();
                         System.out.println("-" + contentLine);
-                        if(contentLine.contains("End")) {
-                            devicemap.put(y + 1,"}");
+                        if(numb == 0) {
                             break;
                         }
                     }
@@ -54,31 +68,42 @@ public class Cuda {
                 }
             }
             if (contentLine.contains("__global__")) {
+                int numb = 0;
                 gpurun[gpurun.length - 1] = contentLine.substring(contentLine.indexOf("__global__") + 10,contentLine.lastIndexOf(" {"));
                 canshu[canshu.length - 1] = contentLine.substring(contentLine.indexOf("("),contentLine.lastIndexOf(")"));
                 for (int y = 0 ;flag; y ++) {
+                    if (contentLine.contains("{")) {
+                        if (contentLine.contains("\\{")) {
+                        }else {
+                            numb++;
+                        }
+                    }
+                    if (contentLine.contains("}")) {
+                        if (contentLine.contains("\\}")) {
+                        }else {
+                            numb--;
+                            System.out.println(contentLine + "|" + numb);
+                        }
+                    }
                     kernelmap.put(y,contentLine);
                     contentLine = br.readLine();
                     System.out.println("-" + contentLine);
-                    if(contentLine.contains("End")) {
-                        kernelmap.put(y + 1,"}");
+                    if(numb == 0) {
                         break;
                     }
                 }
-                flag = true;
             }
-
             if (contentLine.contains("//global")) {
                 glovarmap.put(glovarmap.size() + 1,contentLine);
             }
             if (contentLine.contains("main")) {
                 for (int y = 0 ;flag; y ++) {
-                        main.put(y,contentLine);
-                        System.out.println("主函数执行:" + contentLine);
-                        contentLine = br.readLine();
-                        if(contentLine.contains("End")) {
-                            break;
-                        }
+                    main.put(y,contentLine);
+                    System.out.println("主函数执行:" + contentLine);
+                    contentLine = br.readLine();
+                    if(contentLine.contains("End")) {
+                        break;
+                    }
                 }
                 flag = true;
             }
@@ -240,6 +265,11 @@ public class Cuda {
             String[] t = java.split("curandCreateGenerator");
             String[] t2 = t[1].split("\\(");
             java = t[0] + "curandCreateGenerator" + t2[0] + "(&" + t2[1];
+        }
+        if (java.contains("new int[")) {
+            String[] t = java.split("new int");
+            String temp = t[0].split(" = ")[0].replaceAll("\\[\\]","");
+            java = temp + t[1].split("]")[0]  + "] = {};";
         }
         if(java.contains("shared") ) {
             if (java.contains("= {")) {
