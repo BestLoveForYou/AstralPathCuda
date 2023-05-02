@@ -1,5 +1,7 @@
 package org.dao;
 
+import org.dao.log.Logger;
+
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -17,7 +19,9 @@ public class Cuda {
     private static boolean flag = true;
     private static boolean dflag = true;
     private static String filepath = "\\AstralPathCuda\\";
+    private static final Logger log = new Logger();
     public int create(File file, boolean delete) throws ClassNotFoundException, IOException {
+        log.writeINFO("-------------------------新纪录--------------------------");
         BufferedReader br = new BufferedReader(new FileReader(file));
         
         String[] gpurun = new String[1];
@@ -31,6 +35,7 @@ public class Cuda {
             System.out.println(contentLine);
             if (contentLine.contains("curandGenerator")) {
                 cnRAND = true;
+                log.writeINFO("使用cuRAND库");
             }
             if(contentLine.contains(" __device__")) {
 
@@ -130,7 +135,7 @@ public class Cuda {
             for(Map.Entry<String, String> entry:entrys2) {
                 System.out.println(entry.getKey()+"---"+entry.getValue());
             }
-
+            log.writeINFO("核函数数:" + canshu.length);
 
 
             Date d = new Date();
@@ -202,10 +207,12 @@ public class Cuda {
             if(delete) {
                 f.delete();
             }
-
+            log.close();
         return 1;
     }
     public static String java2cuda(String java) {
+        String log1 = java;
+        long start = System.currentTimeMillis();
         /**
         if (java.contains("__device__")) {
             String t[] = java.split("__device__");
@@ -404,8 +411,10 @@ public class Cuda {
         java = java.replaceAll("\\(GLOBAL\\)","");
         java = java.replaceAll("ICuda.","");
         //这里是核函数自带变量模块
-        java  = java.replaceAll("gridDimz","gridDim.z").replaceAll("gridDimy","gridDim.y").replaceAll("gridDimx","gridDim.x").replaceAll("blockDimz","blockDim.z").replaceAll("blockDimy","blockDim.y").replaceAll("blockIdxx","blockIdx.x").replaceAll("blockIdxy","blockIdx.y").replaceAll("blockIdxz","blockIdx.z").replaceAll("threadIdxx","threadIdx.x").replaceAll("threadIdxy","threadIdx.y").replaceAll("threadIdxz","threadIdx.z").replaceAll("blockDimx","blockDim.x");
-        return java.replaceAll("final","const").replaceAll("System.out.printf","printf");
+        java = java.replaceAll("gridDimz","gridDim.z").replaceAll("gridDimy","gridDim.y").replaceAll("gridDimx","gridDim.x").replaceAll("blockDimz","blockDim.z").replaceAll("blockDimy","blockDim.y").replaceAll("blockIdxx","blockIdx.x").replaceAll("blockIdxy","blockIdx.y").replaceAll("blockIdxz","blockIdx.z").replaceAll("threadIdxx","threadIdx.x").replaceAll("threadIdxy","threadIdx.y").replaceAll("threadIdxz","threadIdx.z").replaceAll("blockDimx","blockDim.x");
+        java = java.replaceAll("final","const").replaceAll("System.out.printf","printf");
+        log.writeINFO("(Java2Cuda)耗时: " + (System.currentTimeMillis() - start) + " ms " + log1 + " -> " + java);
+        return java;
     }
     public static int writeMemory(PrintWriter pu) {
         pu.println("//现在开始全局变量书写");
