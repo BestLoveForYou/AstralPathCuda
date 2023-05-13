@@ -224,7 +224,7 @@ public class Cuda {
         }*/
         java = java.replaceAll("__device__","");
         if(java.contains("__global__")) {
-            if (java.contains("tags:")) {
+            if (java.contains("<<<")) {
                 String[] t = java.split("\\(");
                 String[] t2 = java.split("<<<");
                 t2[1] = t2[1].substring(0,t2[1].indexOf(">>>"));
@@ -346,9 +346,13 @@ public class Cuda {
             java = java.replaceAll("\"","");
         }
 
-        if(java.contains("cudaMalloc")) {
-            String[] t = java.split("cudaMalloc\\(");
-            java = t[0] + "cudaMalloc((void **)&" + t[1].replaceFirst("\\$","");
+        if(java.contains("cudaMallocHost")) {
+            String[] t = java.split("cudaMallocHost");
+            java = t[0] + "cudaMallocHost((void **)&" + t[1].replaceFirst("\\$","").replaceAll("\\(","");
+            java = java.replaceAll("\"","");
+        } else if(java.contains("cudaMalloc")) {
+            String[] t = java.split("cudaMalloc");
+            java = t[0] + "cudaMalloc((void **)&" + t[1].replaceFirst("\\$","").replaceAll("\\(","");
             java = java.replaceAll("\"","");
         }
 
@@ -589,15 +593,21 @@ public class Cuda {
             System.out.println("nvcc " + this.parameter+ " -o " + exename +" "+ filepath);
             BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream(),"GBK"));
             String line = null;
+            String su = "";
             while ((line = input.readLine())!=null){
                 System.out.println(line);
+                su = su + line + "\n";
             }
             int exitValue = pr.waitFor();
             System.out.println("Exited with error code "+exitValue);
+            if(exitValue == 1) {
+                log.writeERROR(su);
+            }
             if (exitValue == 0) {
                 a = 1;
             }
         } catch (IOException e) {
+            log.writeERROR(e.toString());
             System.out.println(e);
             e.printStackTrace();
             a = 0;

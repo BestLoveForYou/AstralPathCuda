@@ -4,9 +4,6 @@ import org.dao.base.*;
 import org.dao.cuRAND.*;
 
 public interface ICuda {
-    String cudaMemcpyDeviceToHost = null;
-    String cudaMemcpyHostToDevice = null;
-
     int N = 0;
     
     int argc = Integer.MAX_VALUE;
@@ -32,10 +29,13 @@ public interface ICuda {
      */
     static <T> T malloc(int t) {return null;}
     static <T> void cudaMalloc(T s, int t) {}
+    static <T> void cudaMallocHost(T s, int t) {}
+    static <T> void cudaHostAlloc(T s, int t,T flags) {}
     static <T> T calloc(int n, int size) {return null;}
 
     static void free(Object... o) {}
     static void cudaFree(Object... o) {}
+    static void cudaFreeHost(Object... o) {}
 
     static float sqrt(float x) {return 1.0F;}
     static float sqrtf(float x) {return 1.0F;}
@@ -60,10 +60,18 @@ public interface ICuda {
     static <T> T atomicAnd(T address, T val) {return null;}
     static <T> T atomicOr(T address, T val) {return null;}
     static <T> T atomicXor(T address, T val) {return null;}
-
-    static cudaError_t cudaMemcpy(final String symbol, final String src, int count,String fromto){return null;}
+    cudaMemcpyKind cudaMemcpyHostToHost = null;
+    cudaMemcpyKind cudaMemcpyHostToDevice = null;
+    cudaMemcpyKind cudaMemcpyDeviceToHost = null;
+    cudaMemcpyKind cudaMemcpyDeviceToDevice = null;
+    cudaMemcpyKind cudaMemcpyDefault = null;
+    static cudaError_t cudaMemcpy(final String symbol, final String src, int count,cudaMemcpyKind fromto){return null;}
     static cudaError_t cudaMemcpyToSymbol(final String symbol, final String src, int count){return null;}
     static cudaError_t cudaMemcpyFromSymbol(final String src,final String symbol,int count){return null;}
+
+    static <T> T cudaMemcpyAsync (String dst,String src,T count,cudaMemcpyKind kind,cudaStream_t stream) {return null;}
+
+
     static void __syncthreads(){}//线程同步
     static void __syncwarp(){}//线程束同步
 

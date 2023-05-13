@@ -11,12 +11,8 @@ import static org.dao.Cuda.cudainitialization;
 
 public class Main {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        System.out.println(cudainitialization());
-        System.out.println(clinitialization());
-        System.out.println("初始化完成!");
-
-        int a = 0;
-        String f = "D:\\idea_astralpathtalk\\AstralPathCuda\\src\\org\\test\\ReduceSHFL.java";
+        int a = 1;
+        String f = "D:\\idea_astralpathtalk\\AstralPathCuda\\src\\org\\test\\TestStream.java";
         if (a == 0) {
             Cuda c= new Cuda();
             c.setParameter("-arch=sm_60");

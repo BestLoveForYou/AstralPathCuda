@@ -28,7 +28,7 @@ public class TestNew implements ICuda {
 
         ICuda.cudaMalloc("d_x1",M);
 
-        ICuda.cudaMemcpy("d_x1","h_x",M,"cudaMemcpyHostToDevice");
+        ICuda.cudaMemcpy("d_x1","h_x",M,cudaMemcpyHostToDevice);
 
         ICuda.cudaMalloc("d_y1",M);
 
@@ -39,7 +39,7 @@ public class TestNew implements ICuda {
 
         ICuda.cudaDeviceSynchronize();
 
-        ICuda.cudaMemcpy("h_x","d_y1",M,"cudaMemcpyDeviceToHost");
+        ICuda.cudaMemcpy("h_x","d_y1",M,cudaMemcpyDeviceToHost);
 
 
         ICuda.free($h_x);
