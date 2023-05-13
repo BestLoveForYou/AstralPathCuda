@@ -8,7 +8,7 @@ Next, I will introduce how to use APC. If there is anything unclear, you can lea
 Note: The graphics cards mentioned here refer to Nvidia graphics cards.
 
 ## Cuda Download and Installation
-[CUDA Installation Tutorial (Super Detailed)](https://blog.csdn.net/m0_45447650/article/details/123704930?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522167222191016782427411200%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=167222191016782427411200&biz_id=0&utm_medium=distribute.pc_search_result.none -task-blog-2~all~top_ positive~default-1-123704930-null-null.142%5Ev68%5Econtrol,201%5Ev4%5Eadd_ ask,213%5Ev2%5Et3_ esquery_ v2&utm_ term=cuda%E5%AE%89%E8%A3%85&spm=1018.2226.3001.4187)
+[CUDA Installation Tutorial (Super Detailed)](https://blog.csdn.net/m0_45447650/article/details/123704930)
 ## Github Link
 [Click to download](https://github.com/BestLoveForYou/AstralPathCuda/)
 ## Download
