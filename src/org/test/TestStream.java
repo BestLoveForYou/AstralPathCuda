@@ -38,6 +38,9 @@ public class TestStream implements ICuda {
         ICuda.cudaStreamSynchronize(stream_1);
         ICuda.cudaStreamSynchronize(stream_2);
 
+        ICuda.free($h_x);
+        ICuda.cudaFreeHost($d_x1);
+        ICuda.cudaFreeHost($d_y1);
         ICuda.cudaStreamDestroy(stream_1);
         ICuda.cudaStreamDestroy(stream_2);
     }//End
