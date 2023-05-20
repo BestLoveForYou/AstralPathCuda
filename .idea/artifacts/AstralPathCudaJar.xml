@@ -2,7 +2,7 @@
   <artifact type="jar" name="AstralPathCudaJar">
     <output-path>$PROJECT_DIR$/out/artifacts/AstralPathCudaJar</output-path>
     <root id="archive" name="AstralPathCuda.jar">
-      <element id="module-output" name="AstralPathCuda" />
+      <element id="module-output" name="Yao'sCuda" />
     </root>
   </artifact>
 </component>
