@@ -278,6 +278,21 @@ public class Cuda {
             String temp = t[0].split(" = ")[0].replaceAll("\\[\\]","");
             java = temp + t[1].split("]")[0]  + "] = {};";
         }
+        if (java.contains("new float[")) {
+            String[] t = java.split("new float");
+            String temp = t[0].split(" = ")[0].replaceAll("\\[\\]","");
+            java = temp + t[1].split("]")[0]  + "] = {};";
+        }
+        if (java.contains("new double[")) {
+            String[] t = java.split("new double");
+            String temp = t[0].split(" = ")[0].replaceAll("\\[\\]","");
+            java = temp + t[1].split("]")[0]  + "] = {};";
+        }
+        if (java.contains("new long[")) {
+            String[] t = java.split("new long");
+            String temp = t[0].split(" = ")[0].replaceAll("\\[\\]","");
+            java = temp + t[1].split("]")[0]  + "] = {};";
+        }
         if(java.contains("shared") ) {
             if (java.contains("= {")) {
                 if (java.contains("extern")) {
@@ -348,11 +363,11 @@ public class Cuda {
 
         if(java.contains("cudaMallocHost")) {
             String[] t = java.split("cudaMallocHost");
-            java = t[0] + "cudaMallocHost((void **)&" + t[1].replaceFirst("\\$","").replaceAll("\\(","");
+            java = t[0] + "cudaMallocHost((void **)&" + t[1].replaceFirst("\\$","").replaceFirst("\\(","");
             java = java.replaceAll("\"","");
         } else if(java.contains("cudaMalloc")) {
             String[] t = java.split("cudaMalloc");
-            java = t[0] + "cudaMalloc((void **)&" + t[1].replaceFirst("\\$","").replaceAll("\\(","");
+            java = t[0] + "cudaMalloc((void **)&" + t[1].replaceFirst("\\$","").replaceFirst("\\(","");
             java = java.replaceAll("\"","");
         }
 

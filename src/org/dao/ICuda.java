@@ -23,7 +23,6 @@ public interface ICuda {
     int blockDimy = 0;
     int blockDimz = 0;
 
-
     /**
      * 这些是Cuda和C语言提供的部分函数
      */
