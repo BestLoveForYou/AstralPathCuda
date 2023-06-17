@@ -1,7 +1,11 @@
 # AstralPathCuda 文档
-2023-05-13 21:13:53 星期六
+2023-06-17 21:38:41 星期六
 
 ## 介绍
+**AstralPathCuda**项目是由AstralPath工作室开发的一种用于Java的GPU开发的工具包,具有非常丰富的功能,可以实现大部分场景下的CUDA开发,尤其是科学计算下的开发.
+使用AstralPathCuda,可以帮助Java程序员在没有C语言的基础下,快速的开发出一个完善的CUDA程序.
+
+### 作者的话
 使用GPU完成科学计算不仅能提高计算的稳健性,更能提供一个无与伦比的速度,Java也是一种常用的CPU语言,开源平台为其提供了丰富的环境,但Cuda和Java的混合使用一直都是个麻烦事,毕竟两者本来都不该有交集,但GPU的高并发能力强大无比,CSDN上基本都是Java通过JNI调用CUDA程序,但麻烦无比,而使用JCuda也需要提供核函数的PTX文件,更加麻烦,还增加了开发难度,鉴于此前景,我开始了JavaGPU混合开发辅助包AstralPathCuda(以下简称APC)的编写.
 在项目的最开始,只做了一些很简单的功能,比如线程同步函数,简单的核函数,线程索引...
 随着项目的逐渐深入,开发的功能和难度也是越来越高,一些最开始的不适合定义也在现在被更改,到目前为止,使用APC已经可以开发出一个有模有样的复杂Cuda程序了,从动静态的全局内存;共享内存,到原子函数,再到现在已经基本完成的线程束内函数,都已经逐渐完善了.
@@ -22,6 +26,17 @@
 在Cuda中,一个Cuda程序是由C/C++编写的,而APC使用的语言是Java,所以,或多或少的会有很多语言上的底层差异,对此,我这里的解决方法是```注释辅助+APC自动填充```,在实际编写中使用者会感受到这种方法的快捷和灵活的.
 在APC在开发中最基本的单位是**类**,再导入AstralPaCuda开发包后,这个类需要使用ICuda的接口,ICuda提供了一些Cuda函数,变量,以及C的部分函数
 
+## 线程索引
+提供了threadIdx,,blockIdx,blockDimx,gridDimx四个类
+可以直接在程序中使用```threadIdx.x```这样的变量(CUDA中的寄存器变量,可以直接使用)
+其次,与早期版本中在ICuda中提供了```threadIdxx```,```threadIdxy```这一类的变量,也可以正常使用
+
+### 格式输出
+可以直接使用Java提供的]
+```java
+System.out.printf(String format,Object ...args[])
+```
+也可使用ICuda中提供的```printf(String format,Object ...args[])```函数
 ## 数组
 数组是一个比较特殊的存在,由于java中的数组和C中的数组定义方式有较大不同,所以需要设置提示符.
 数组定义如下
@@ -82,6 +97,11 @@ cudaMemcpyToSymbol(d_x,ha,sizeof(double)*128);
 
 ```cudaMemcpyFromSymbol```是同样的用法
 
+
+```java
+static cudaError_t cudaMemcpyToSymbol(final String symbol, final String src, int count){return null;}
+    static cudaError_t cudaMemcpyFromSymbol(final String src,final String symbol,int count){return null;}
+```
 注意:
 - 这里的核函数在核函数调用都是用```__device__d_x```名称
   而在像cudaMemcpyFromSymbol方法中使用的名称是```d_x```,而不是```__device__d_x```
@@ -400,6 +420,8 @@ static <T> void curandGenerateUniformDouble(curandGenerator_t c, T memory, int N
 ---
 
 # 更新日志:
+### v1.2023.0617.09
+- 修复了cudaMemcpy的参数Bug
 
 ### v1.2023.0513.08
 - 优化了cudaMemcpy使用

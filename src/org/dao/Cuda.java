@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Cuda {
+    private final String VERSION = "v1.2023.0617.09";
     private static String exename = "astralpathcuda.exe";
     private String parameter;
     private static boolean cnRAND = false;
@@ -22,6 +23,8 @@ public class Cuda {
     private static final Logger log = new Logger();
     public int create(File file, boolean delete) throws ClassNotFoundException, IOException {
         log.writeINFO("-------------------------新纪录--------------------------");
+        log.writeINFO("使用版本:" + VERSION);
+
         BufferedReader br = new BufferedReader(new FileReader(file));
         
         String[] gpurun = new String[1];

@@ -1,6 +1,10 @@
 # AstralPathCuda Document
-May 13, 2023 21:13:53 Saturday
-## Introduction:
+Saturday, June 17, 2023 21:38:41
+
+## Introduction
+The **AstralPathCuda** project is a toolkit for GPU development in Java developed by AstralPath Studio. It has a rich set of features and can be used for CUDA development in most scenarios, especially in scientific computing. Using AstralPathCuda, Java programmers can quickly develop comprehensive CUDA programs without the need for a C language foundation.
+
+### Author's Note
 Using GPU for scientific computing can not only improve the robustness of calculations, but also provide unparalleled speed. Java is a commonly used CPU language, and the open-source platform provides a rich environment for it. However, the combination of Cuda and Java has always been a troublesome issue, as the two were not originally meant to intersect. However, the powerful concurrency of the GPU makes it a valuable asset. On CSDN, it is common to see Java calling CUDA programs through JNI, but this method is very cumbersome. Using JCuda also requires providing the PTX file for the kernel function, which is even more troublesome and increases development difficulty. Given this prospect, I started developing the JavaGPU hybrid development package AstralPathCuda (hereinafter referred to as APC).
 At the beginning of the project, only some simple functions were implemented, such as thread synchronization functions, simple kernel functions, thread indexes, etc. As the project gradually deepened, the development functions and difficulties also increased. Some parts that were not suitable for definition at the beginning have also been modified now. So far, using APC can develop a complex Cuda program with a complete structure, from dynamic and static global memory, shared memory, atomic functions, to the now almost completed thread bundle function.
 When solving the problem of using pointers in Java, it took me a long time and effort to think about how to implement it. But fortunately, the main problem has been solved.
@@ -18,6 +22,19 @@ In Cuda, a Cuda program is written in C/C++, while APC uses Java as its language
 
 In APC, the most basic unit in development is the `class`, which needs to use the `ICuda` interface after importing the `AstralPaCuda` development package. `ICuda` provides some Cuda functions, variables, and some C functions.
 
+## Thread Indices
+There are four classes available: ```threadIdx```, ```blockIdx```, ```blockDimx```,and ```gridDimx``` that can be directly used in the program. For example, variables like threadIdx.x can be used directly as register variables in CUDA.
+
+In addition, variables like threadIdxx and threadIdxy, which were provided in earlier versions within ICuda, can also be used normally.
+
+## Formatted Output
+You can directly use the Java provided:
+```java
+System.out.printf(String format, Object ...args[]);
+```
+Alternatively, you can use the printf(String format, Object ...args[]) function provided in ICuda.
+
+## Array
 Arrays are a somewhat special entity. Because the way arrays are defined in Java is quite different from that in C, prompt symbols need to be set. 
 
 Array definition is as follows:
@@ -414,7 +431,8 @@ static <T> void curandGenerateNormalLong(curandGenerator_t generator, long[] $gX
 ---
 
 # Update Log:
-
+### v1.2023.0617.09
+- Fixed the bug in the parameter processing of "cudaMemcpy";
 ### v1.2023.0513.08
 - Optimized the use of cudaMemcpy
 - Provided functions for asynchronous transfer with CUDA streams and non-pageable memory
