@@ -5,9 +5,11 @@ import org.dao.log.Logger;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Cuda {
-    private final String VERSION = "v1.2023.0617.09";
+    private final String VERSION = "v1.2023.0621.10";
     private static String exename = "astralpathcuda.exe";
     private String parameter;
     private static boolean cnRAND = false;
@@ -104,12 +106,12 @@ public class Cuda {
             if (contentLine.contains("//global")) {
                 glovarmap.put(glovarmap.size() + 1,contentLine);
             }
-            if (contentLine.contains("main")) {
+            if (contentLine.contains(" main")) {
                 for (int y = 0 ;flag; y ++) {
                     main.put(y,contentLine);
                     System.out.println("主函数执行:" + contentLine);
                     contentLine = br.readLine();
-                    if(contentLine.contains("End")) {
+                    if(contentLine.contains("//End")) {
                         break;
                     }
                 }
@@ -352,6 +354,21 @@ public class Cuda {
             java = java.replaceAll("\"","");
         }
         if (java.contains("malloc(")) {
+            if(java.contains("(double [])")) {
+            }else if(java.contains("(int [])")) {
+            }else if(java.contains("(long [])")) {
+            }else if(java.contains("(float [])")) {
+            }else {
+                if(java.contains("double[]")) {
+                    java = java.split("malloc")[0] + "(double *) malloc" +  java.split("malloc")[1];
+                }else if(java.contains("(int[])")) {
+                    java = java.split("malloc")[0] + "(int *) malloc" +  java.split("malloc")[1];
+                }else if(java.contains("(long[])")) {
+                    java = java.split("malloc")[0] + "(long *) malloc" +  java.split("malloc")[1];
+                }else if(java.contains("(float[])")) {
+                    java = java.split("malloc")[0] + "(float *) malloc" +  java.split("malloc")[1];
+                }
+            }
             java = java.replaceAll("\"","");
         }
         if (java.contains("calloc(")) {

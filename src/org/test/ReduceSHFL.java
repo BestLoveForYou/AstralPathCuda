@@ -9,13 +9,13 @@ import org.dao.base.th.threadIdx;
 public class ReduceSHFL implements ICuda {
     public final int N = 1000;//global
     public double[] __device__d_y;//length:2
-    public void __global__sum(double[] d_x) {
+    public void __global__sum(double[] $d_x) {
         final int tid = threadIdx.x;
         final int bid = blockIdx.x;
         double[] __shared__s_y = {};//length:128
         final int n = bid * blockDim.x + tid;
         double y = 0.0;
-        __shared__s_y[tid] = (n < N) ? d_x[n] : 0.0;
+        __shared__s_y[tid] = (n < N) ? $d_x[n] : 0.0;
         ICuda.__syncthreads();
         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
         {
@@ -47,6 +47,7 @@ public class ReduceSHFL implements ICuda {
             $a[x] = 11.0;
         }
         double[] $d_x = {};
+        double[] $d_x1 = {};
         ICuda.cudaMalloc("$d_x",ICuda.sizeof("double")*N);
         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("double")*N,cudaMemcpyHostToDevice);
         final int block_size = 128;
@@ -54,6 +55,9 @@ public class ReduceSHFL implements ICuda {
         __global__sum($d_x);
         ICuda.cudaDeviceSynchronize();
         ICuda.cudaMemcpyFromSymbol("b","d_y",ICuda.sizeof("double")*2);
+        {
+            System.out.printf("hello world");
+        }
         System.out.printf("%f",$b[0]);
     }//End
 }

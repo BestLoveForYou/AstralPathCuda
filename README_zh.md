@@ -394,17 +394,22 @@ static curandStatus_t curandSetPseudoRandomGeneratorSeed(curandGenerator_t c,lon
         return null;
     }
 ```
--- Seed
+
+- Seed
+
 是一个64-bit integar，用来初始化伪随机数生成器的起始状态，相同的seed经常生成相同的随机数序列
--- Offset
+- Offset
+
 offset参数用来跳过随机数序列的开头，第一个随机数从序列的第offset个开始取，这使得多次运行同一程序，从相同随机数序列生成的随机数不重叠。is not available for the CURAND_RNG_PSEUDO_MTGP32 and CURAND_RNG_PSEUDO_MT19937 generators
--- Order
+
+- Order
 用来选择结果如何在全局内存中排序
 CURAND_ORDERING_PSEUDO_DEFAULT
 CURAND_ORDERING_PSEUDO_LEGACY
 CURAND_ORDERING_PSEUDO_BEST
 CURAND_ORDERING_PSEUDO_SEEDED
 CURAND_ORDERING_QUASI_DEFAULT (用于拟随机数的选项)
+- 
 - Generation Functions
 ```java
 static <T> void curandGenerateUniformDouble(curandGenerator_t c, T memory, int N) {}
@@ -420,6 +425,9 @@ static <T> void curandGenerateUniformDouble(curandGenerator_t c, T memory, int N
 ---
 
 # 更新日志:
+### v1.2023.0622.10
+- 增加了更加宽松的指针分配内存方式
+- 修复了示例程序的Bug
 ### v1.2023.0617.09
 - 修复了cudaMemcpy的参数Bug
 
