@@ -174,7 +174,20 @@ public class Cuda {
                 for (int x = 0; x < gpurun.length;x++) {
                     pu.println("__global__ void " + java2cuda(gpurun[x] + "(GLOBAL)") + " {");
                     for (int y = 1; y < kernelmap.size(); y++ ) {
-                        pu.println(java2cuda(kernelmap.get(y)));
+                        if(!kernelmap.get(y).contains("for")) {
+                            pu.println(java2cuda(kernelmap.get(y)));
+                        } else if(!kernelmap.get(y).contains("while")) {
+                            pu.println(java2cuda(kernelmap.get(y)));
+                        } else {
+                            if (kernelmap.get(y).replaceFirst(";", "").contains(";")) {
+                                String c[] = kernelmap.get(y).split(";");
+                                for (int x1 = 0; x1 < c.length; x1++) {
+                                    pu.println(java2cuda(c[x1] + ";"));
+                                }
+                            } else {
+                                pu.println(java2cuda(kernelmap.get(y)));
+                            }
+                        }
                     }
                 }
             }
@@ -184,7 +197,21 @@ public class Cuda {
                     for (int x = 0; x < gpurun.length;x++) {
                         pu.println("__device__ " + dreturn[x].replaceAll("public ","") + java2cuda(dgpurun[x] + "(GLOBAL)") + " {");
                         for (int y = 1; y < devicemap.size(); y++ ) {
-                            pu.println(java2cuda(devicemap.get(y)));
+                            if(!devicemap.get(y).contains("for")) {
+                                pu.println(java2cuda(devicemap.get(y)));
+                            } else if(!devicemap.get(y).contains("while")) {
+                                pu.println(java2cuda(devicemap.get(y)));
+                            } else {
+                                if (devicemap.get(y).replaceFirst(";","").contains(";")) {
+                                    String c[] = devicemap.get(y).split(";");
+                                    for (int x1 = 0;x1 < c.length; x1 ++) {
+                                        pu.println(java2cuda(c[x1] + ";"));
+                                    }
+                                } else {
+                                    pu.println(java2cuda(devicemap.get(y)));
+                                }
+                            }
+
                         }
                     }
                 }
@@ -228,6 +255,7 @@ public class Cuda {
             }
         }*/
         java = java.replaceAll("__device__","");
+
         if(java.contains("__global__")) {
             if (java.contains("<<<")) {
                 String[] t = java.split("\\(");
@@ -486,7 +514,21 @@ public class Cuda {
 
             }else {
                 System.out.println(entry.getKey()+"---"+entry.getValue());
-                pu.println(java2cuda(entry.getValue()));
+                if(!entry.getValue().contains("for")) {
+                    pu.println(java2cuda(entry.getValue()));
+                } else if(!entry.getValue().contains("while")) {
+                    pu.println(java2cuda(entry.getValue()));
+                } else {
+                    if (entry.getValue().replaceFirst(";","").contains(";")) {
+                        String c[] = entry.getValue().split(";");
+                        for (int x1 = 0;x1 < c.length; x1 ++) {
+                            pu.println(java2cuda(c[x1] + ";"));
+                        }
+                    } else {
+                        pu.println(java2cuda(entry.getValue()));
+                    }
+                }
+
             }
 
         }
