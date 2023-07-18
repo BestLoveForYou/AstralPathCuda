@@ -73,7 +73,15 @@ public interface ICuda {
 
     static void __syncthreads(){}//线程同步
     static void __syncwarp(){}//线程束同步
-
+    /**
+     * 计时
+     */
+    static cudaError_t cudaEventCreate(cudaEvent_t cudaEventT) {return null;}
+    static cudaError_t cudaEventRecord(cudaEvent_t cudaEventT) {return null;}
+    static cudaError_t cudaEventQuery(cudaEvent_t cudaEventT) {return null;}
+    static cudaError_t cudaEventSynchronize(cudaEvent_t cudaEventT) {return null;}
+    static cudaError_t cudaEventElapsedTime(float elapsed,cudaEvent_t cudaEventT,cudaEvent_t cudaEventT2) {return null;}
+    static cudaError_t cudaEventDestroy(cudaEvent_t cudaEventT) {return null;}
     /**
      * 随机数
      */

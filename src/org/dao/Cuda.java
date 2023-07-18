@@ -13,8 +13,8 @@ public class Cuda {
     private static String exename = "astralpathcuda.exe";
     private String parameter;
     private static boolean cnRAND = false;
-    private static Map<Integer,String> kernelmap = new TreeMap<>();
-    private static final Map<Integer,String> devicemap = new TreeMap<>();
+    private static Map<Integer,Map> dev = new HashMap<>();
+    private static Map<Integer,Map> gev = new HashMap<>();
     private static Map<Integer,String> glovarmap = new TreeMap<>();
     private static Map<Integer,String> afterkernelmap = new TreeMap<>();
     private static Map<Integer,String> main = new TreeMap<>();
@@ -28,80 +28,57 @@ public class Cuda {
         log.writeINFO("使用版本:" + VERSION);
 
         BufferedReader br = new BufferedReader(new FileReader(file));
-        
-        String[] gpurun = new String[1];
-        String[] canshu = new String[1];
 
-        String[] dgpurun = new String[1];
-        String[] dcanshu = new String[1];
-        String[] dreturn = new String[1];
+        List<String> gpurun = new ArrayList<>();
+        List<String> canshu = new ArrayList<>();
+
+        List<String> dgpurun = new ArrayList<>();
+        List<String> dcanshu = new ArrayList<>();
+        List<String> dreturn = new ArrayList<>();
         String contentLine = br.readLine();
+        int device=0;
         for (int x = 0 ;contentLine != null; x ++) {
-            System.out.println(contentLine);
             if (contentLine.contains("curandGenerator")) {
                 cnRAND = true;
                 log.writeINFO("使用cuRAND库");
             }
-            if(contentLine.contains(" __device__")) {
-
+            if(contentLine.contains("__device__")) {
                 if (contentLine.contains("(")) {
-                    dgpurun[dgpurun.length - 1] = "__device__" + contentLine.substring(contentLine.indexOf("__device__") + 10,contentLine.lastIndexOf(" {"));
-                    dcanshu[dcanshu.length - 1] = contentLine.substring(contentLine.indexOf("("),contentLine.lastIndexOf(")"));
-                    dreturn[dreturn.length - 1] = contentLine.substring(contentLine.indexOf("public"),contentLine.lastIndexOf("__device__"));
-
+                    dgpurun.add("__device__" + contentLine.substring(contentLine.indexOf("__device__") + 10,contentLine.lastIndexOf(" {")));
+                    dcanshu.add(contentLine.substring(contentLine.indexOf("("),contentLine.lastIndexOf(")")));
+                    dreturn.add(contentLine.substring(contentLine.indexOf("public"),contentLine.lastIndexOf("__device__")));
+                    Map<Integer,String> devicemap = new HashMap<>();
                     for (int y = 0 ;dflag; y ++) {
-                        int numb = 0;
-                        if (contentLine.contains("{")) {
-                            if (contentLine.contains("\\{")) {
-                            }else {
-                                numb++;
-                            }
-                        }
-                        if (contentLine.contains("}")) {
-                            if (contentLine.contains("\\}")) {
-                            }else {
-                                numb--;
-                                System.out.println(contentLine + "|" + numb);
-                            }
-                        }
                         devicemap.put(y,contentLine);
                         contentLine = br.readLine();
-                        System.out.println("-" + contentLine);
-                        if(numb == 0) {
+                        if(contentLine.contains("//End")) {
+                            devicemap.put(y + 1,"}");
                             break;
                         }
                     }
+                    dev.put(device,devicemap);
+                    device++;
+
                     dflag = true;
                 }else {
-                    System.out.println("全局内存:" + contentLine);
                     Memorymap.put(contentLine.substring(contentLine.indexOf("public ") + 7, contentLine.indexOf("_") - 1), contentLine.substring(contentLine.indexOf("__device__")));
                 }
             }
+            int global = 0;
             if (contentLine.contains("__global__")) {
-                int numb = 0;
-                gpurun[gpurun.length - 1] = contentLine.substring(contentLine.indexOf("__global__") + 10,contentLine.lastIndexOf(" {"));
-                canshu[canshu.length - 1] = contentLine.substring(contentLine.indexOf("("),contentLine.lastIndexOf(")"));
+                gpurun.add(contentLine.substring(contentLine.indexOf("__global__") + 10,contentLine.lastIndexOf(" {")));
+                canshu.add(contentLine.substring(contentLine.indexOf("("),contentLine.lastIndexOf(")")));
+                Map<Integer,String> kernelmap = new TreeMap<>();
                 for (int y = 0 ;flag; y ++) {
-                    if (contentLine.contains("{")) {
-                        if (contentLine.contains("\\{")) {
-                        }else {
-                            numb++;
-                        }
-                    }
-                    if (contentLine.contains("}")) {
-                        if (contentLine.contains("\\}")) {
-                        }else {
-                            numb--;
-                            System.out.println(contentLine + "|" + numb);
-                        }
-                    }
                     kernelmap.put(y,contentLine);
                     contentLine = br.readLine();
-                    System.out.println("-" + contentLine);
-                    if(numb == 0) {
+                    if(contentLine.contains("//End")) {
+                        kernelmap.put(y + 1,"}");
                         break;
                     }
                 }
+                gev.put(global,kernelmap);
+                global++;
             }
             if (contentLine.contains("//global")) {
                 glovarmap.put(glovarmap.size() + 1,contentLine);
@@ -109,7 +86,6 @@ public class Cuda {
             if (contentLine.contains(" main")) {
                 for (int y = 0 ;flag; y ++) {
                     main.put(y,contentLine);
-                    System.out.println("主函数执行:" + contentLine);
                     contentLine = br.readLine();
                     if(contentLine.contains("//End")) {
                         break;
@@ -120,28 +96,16 @@ public class Cuda {
             contentLine = br.readLine();
             }
             boolean a = true;
-            for (int x = 0; x < canshu.length;x++) {
+            for (int x = 0; x < canshu.size();x++) {
                 try {
-                    canshu[x] = canshu[x].substring(1);
+                    String tep1 = canshu.get(x).substring(1);
                 } catch (Exception e) {
                     a = false;
                 }
 
-
             }
-            //记录核函数
-            System.out.println("[INFO]核函数记录完成");
-            Set<Map.Entry<Integer,String>> entrys= kernelmap.entrySet();
-            for(Map.Entry<Integer,String> entry:entrys) {
-                System.out.println(entry.getKey()+"---"+entry.getValue());
-            }
-            System.out.println("[INFO]全局内存记录完成");
-            Set<Map.Entry<String, String>> entrys2= Memorymap.entrySet();
-            for(Map.Entry<String, String> entry:entrys2) {
-                System.out.println(entry.getKey()+"---"+entry.getValue());
-            }
-            log.writeINFO("核函数数:" + canshu.length);
-
+            log.writeINFO("核函数数:" + canshu.size());
+            log.writeINFO("设备函数数:" + device);
 
             Date d = new Date();
             SimpleDateFormat format0 = new SimpleDateFormat("yyyyMMddHHmm");
@@ -157,6 +121,7 @@ public class Cuda {
             //创建初始文件
             PrintWriter pu = new PrintWriter(f);
             pu.println("#include<stdio.h>");
+            pu.println("#include <cuda_runtime.h>");
             pu.println("using namespace std;");
 
             if (cnRAND) {
@@ -168,60 +133,57 @@ public class Cuda {
 
             writeMemory(pu);
 
-
-            //以上是变量部分
+        //以上是变量部分
+        //设备函数
+        try {
             if (a) {
-                for (int x = 0; x < gpurun.length;x++) {
-                    pu.println("__global__ void " + java2cuda(gpurun[x] + "(GLOBAL)") + " {");
-                    for (int y = 1; y < kernelmap.size(); y++ ) {
-                        if(!kernelmap.get(y).contains("for")) {
-                            pu.println(java2cuda(kernelmap.get(y)));
-                        } else if(!kernelmap.get(y).contains("while")) {
-                            pu.println(java2cuda(kernelmap.get(y)));
+                for (int x = 0; x < dgpurun.size();x++) {
+                    pu.println("__device__ " + dreturn.get(x).replaceAll("public ","") + java2cuda(dgpurun.get(x) + "(GLOBAL)") + " {");
+                    for (int y = 1; y < dev.get(x).size(); y++ ) {
+                        if(!dev.get(x).get(y).toString().contains("for")) {
+                            pu.println(java2cuda((String) dev.get(x).get(y)));
+                        } else if(!dev.get(x).get(y).toString().contains("while")) {
+                            pu.println(java2cuda((String) dev.get(x).get(y)));
                         } else {
-                            if (kernelmap.get(y).replaceFirst(";", "").contains(";")) {
-                                String c[] = kernelmap.get(y).split(";");
+                            if (dev.get(x).get(y).toString().replaceFirst(";","").contains(";")) {
+                                String c[] = dev.get(x).get(y).toString().split(";");
+                                for (int x1 = 0;x1 < c.length; x1 ++) {
+                                    pu.println(java2cuda(c[x1] + ";"));
+                                }
+                            } else {
+                                pu.println(java2cuda(dev.get(x).get(y).toString()));
+                            }
+                        }
+
+                    }
+                }
+            }
+        }catch (Exception e) {
+        }
+            //核函数
+            if (a) {
+                for (int x = 0; x < gpurun.size();x++) {
+                    pu.println("__global__ void " + java2cuda(gpurun.get(x) + "(GLOBAL)") + " {");
+                    for (int y = 1; y < gev.get(x).size(); y++ ) {
+                        if(!gev.get(x).get(y).toString().contains("for")) {
+                            pu.println(java2cuda((String) gev.get(x).get(y)));
+                        } else if(!gev.get(x).get(y).toString().contains("while")) {
+                            pu.println(java2cuda(gev.get(x).get(y).toString()));
+                        } else {
+                            if (gev.get(x).get(y).toString().replaceFirst(";", "").contains(";")) {
+                                String c[] = gev.get(x).get(y).toString().split(";");
                                 for (int x1 = 0; x1 < c.length; x1++) {
                                     pu.println(java2cuda(c[x1] + ";"));
                                 }
                             } else {
-                                pu.println(java2cuda(kernelmap.get(y)));
+                                pu.println(java2cuda((String) gev.get(x).get(y)));
                             }
                         }
                     }
                 }
             }
-            //以上是变量部分
-            try {
-                if (a) {
-                    for (int x = 0; x < gpurun.length;x++) {
-                        pu.println("__device__ " + dreturn[x].replaceAll("public ","") + java2cuda(dgpurun[x] + "(GLOBAL)") + " {");
-                        for (int y = 1; y < devicemap.size(); y++ ) {
-                            if(!devicemap.get(y).contains("for")) {
-                                pu.println(java2cuda(devicemap.get(y)));
-                            } else if(!devicemap.get(y).contains("while")) {
-                                pu.println(java2cuda(devicemap.get(y)));
-                            } else {
-                                if (devicemap.get(y).replaceFirst(";","").contains(";")) {
-                                    String c[] = devicemap.get(y).split(";");
-                                    for (int x1 = 0;x1 < c.length; x1 ++) {
-                                        pu.println(java2cuda(c[x1] + ";"));
-                                    }
-                                } else {
-                                    pu.println(java2cuda(devicemap.get(y)));
-                                }
-                            }
-
-                        }
-                    }
-                }
-            }catch (Exception e) {
-                System.out.println("未使用device设备函数");
-            }
 
 
-            //以上是核函数部分
-            System.out.println("[INFO]核函数编写完成");
 
             writeMain(pu);
             //主函数完成
@@ -240,6 +202,8 @@ public class Cuda {
                 f.delete();
             }
             log.close();
+
+
         return 1;
     }
     public static String java2cuda(String java) {
@@ -255,7 +219,7 @@ public class Cuda {
             }
         }*/
         java = java.replaceAll("__device__","");
-
+        java = java.replaceAll("public","__device__");
         if(java.contains("__global__")) {
             if (java.contains("<<<")) {
                 String[] t = java.split("\\(");
@@ -344,7 +308,6 @@ public class Cuda {
         } else
         if(java.contains("length")) {
             if (!java.contains("$")) {
-                System.err.println(java);
                 java = " " +java;
                 if (java.contains("=")) {
                     String temp = java.substring(java.indexOf("length:"));
@@ -356,8 +319,6 @@ public class Cuda {
                         java = t[1] + " " +t[2] + "[" + temp + "]" + " = " + t2[1];
                     } catch (Exception e) {
                     }
-
-                    System.out.println("数组:" + java);
                 } else {
                     String[] ts = java.split(";");
                     java = ts[0] + " = {}" + ";" + ts[1];
@@ -371,29 +332,25 @@ public class Cuda {
                         java = java.replaceAll(" = \\{}","");
                     } catch (Exception e) {
                     }
-
-                    System.out.println("数组:" + java);
                 }
             }
         }
 
 
-        if (java.contains("sizeof")) {
-            java = java.replaceAll("\"","");
-        }
+
         if (java.contains("malloc(")) {
-            if(java.contains("(double [])")) {
-            }else if(java.contains("(int [])")) {
-            }else if(java.contains("(long [])")) {
-            }else if(java.contains("(float [])")) {
+            if(java.contains("(double")) {
+            }else if(java.contains("(int")) {
+            }else if(java.contains("(long")) {
+            }else if(java.contains("(float")) {
             }else {
                 if(java.contains("double[]")) {
                     java = java.split("malloc")[0] + "(double *) malloc" +  java.split("malloc")[1];
-                }else if(java.contains("(int[])")) {
+                }else if(java.contains("int[]")) {
                     java = java.split("malloc")[0] + "(int *) malloc" +  java.split("malloc")[1];
-                }else if(java.contains("(long[])")) {
+                }else if(java.contains("long[]")) {
                     java = java.split("malloc")[0] + "(long *) malloc" +  java.split("malloc")[1];
-                }else if(java.contains("(float[])")) {
+                }else if(java.contains("float[]")) {
                     java = java.split("malloc")[0] + "(float *) malloc" +  java.split("malloc")[1];
                 }
             }
@@ -425,12 +382,19 @@ public class Cuda {
             }
 
             java = java.replaceFirst("\\[]","");
-            if (java.contains("[]")) {
-                String[] a = java.split("\\[]");
-                java = a[0] + "$" + a[1];
-                if (java.contains("(GLOBAL)")) {java = a[0] + a[1];}
+            if(java.contains(",")) {
+                if (!java.contains("ICuda")) {
+                    if(!java.contains(";")) {
+                        java = java.replaceAll("\\[]","");
+                    }
+                }
+            }else{
+                if (java.contains("[]")) {
+                    String[] a = java.split("\\[]");
+                    java = a[0] + "$" + a[1];
+                    if (java.contains("(GLOBAL)")) {java = a[0] + a[1];}
+                }
             }
-            System.err.println(java);
             if (java.contains("cudaMalloc")) {
                 String[] t = java.split("cudaMalloc\\(");
                 java = t[0] + "cudaMalloc((void **)&" + t[1].replaceFirst("\\$","");
@@ -461,6 +425,11 @@ public class Cuda {
             String[] t2 = t[1].split("new cudaStream_t");
             java = t[0] + t2[1].replaceFirst("\\(\\)","");
         }
+        if (java.contains("new cudaEvent_t")) {
+            String[] t = java.split("=");
+            String[] t2 = t[1].split("new cudaEvent_t");
+            java = t[0] + t2[1].replaceFirst("\\(\\)","");
+        }
         if (java.contains("new cudaDeviceProp")) {
             String[] t = java.split("=");
             String[] t2 = t[1].split("new cudaDeviceProp");
@@ -475,6 +444,17 @@ public class Cuda {
             String[] a = java.split("cudaGetDeviceProperties\\(");
             java = a[0] +"cudaGetDeviceProperties(&" + a[1];
         }
+        if (java.contains("cudaEventCreate(")) {
+            String[] a = java.split("cudaEventCreate\\(");
+            java = a[0] +"cudaEventCreate(&" + a[1];
+        }
+        if (java.contains("cudaEventElapsedTime(")) {
+            String[] a = java.split("cudaEventElapsedTime\\(");
+            java = a[0] +"cudaEventElapsedTime(&" + a[1];
+        }
+        if (java.contains("sizeof")) {
+            java = java.replaceAll("\"","");
+        }
         java = java.replaceAll("\\(GLOBAL\\)","");
         java = java.replaceAll("ICuda.","");
         //这里是核函数自带变量模块
@@ -487,14 +467,12 @@ public class Cuda {
         pu.println("//现在开始全局变量书写");
         Set<Map.Entry<Integer, String>> entrys2=glovarmap.entrySet();
         for(Map.Entry<Integer, String> entry:entrys2) {
-            System.out.println(entry.getKey()+"---"+entry.getValue());
             pu.println(java2cuda(entry.getValue().replaceAll("public","")));
 
         }
         Set<Map.Entry<String,String>> entrys1=Memorymap.entrySet();
         pu.println("//现在开始全局内存书写");
         for(Map.Entry<String,String> entry:entrys1) {
-            System.out.println(entry.getKey()+"---"+entry.getValue());
 
             if(entry.getKey().contains("[]")) {
                 pu.println("__device__  " + java2cuda(entry.getKey() + " " + entry.getValue()));
@@ -513,7 +491,6 @@ public class Cuda {
             if(entry.getValue().contains("public")) {
 
             }else {
-                System.out.println(entry.getKey()+"---"+entry.getValue());
                 if(!entry.getValue().contains("for")) {
                     pu.println(java2cuda(entry.getValue()));
                 } else if(!entry.getValue().contains("while")) {
@@ -597,13 +574,6 @@ public class Cuda {
         Cuda.exename = exename;
     }
 
-    public static Map<Integer, String> getKernelmap() {
-        return kernelmap;
-    }
-
-    public static void setKernelmap(Map<Integer, String> kernelmap) {
-        Cuda.kernelmap = kernelmap;
-    }
 
     public static Map<Integer, String> getGlovarmap() {
         return glovarmap;

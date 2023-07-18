@@ -1,13 +1,14 @@
 package org.test;
 
 import org.dao.ICuda;
+import org.dao.base.cudaEvent_t;
 import org.dao.base.th.blockDim;
 import org.dao.base.th.blockIdx;
 import org.dao.base.th.gridDim;
 import org.dao.base.th.threadIdx;
 
 public class ReduceSHFL implements ICuda {
-    public final int N = 5;//global
+    public final int N = 1000;//global
     public double[] __device__d_z;//length:10
     public void __global__sum(double[] $d_x,double[] $d_y) {
         final int tid = threadIdx.x;
@@ -74,8 +75,8 @@ public class ReduceSHFL implements ICuda {
         double[] $a2 = ICuda.malloc(ICuda.sizeof("double")*N);
         double[] $b = ICuda.malloc(ICuda.sizeof("double")*10);
         for (int x = 0 ;x < N;x ++) {
-            $a[x] = 11 + 1.0 * x;
-            $a2[x] = 11 + 3.0 * x;
+            $a[x] = 14.21412 + 1.1245 * x;
+            $a2[x] = 124.21452 + 123.0523 * x;
         }
         double[] $d_x = {};
         double[] $d_y = {};
@@ -85,7 +86,20 @@ public class ReduceSHFL implements ICuda {
         ICuda.cudaMemcpy("$d_y","$a2",ICuda.sizeof("double")*N,cudaMemcpyHostToDevice);
         final int block_size = 128;
         final int grid_size =  (N + block_size - 1) / block_size;
+        cudaEvent_t start = new cudaEvent_t();
+        cudaEvent_t stop = new cudaEvent_t();
+        ICuda.cudaEventCreate(start);
+        ICuda.cudaEventCreate(stop);
+        ICuda.cudaEventRecord(start);
+
         __global__sum($d_x,$d_y);
+
+        ICuda.cudaEventRecord(stop);
+        ICuda.cudaEventSynchronize(stop);
+        float elapsed_time = 0;
+        ICuda.cudaEventElapsedTime(elapsed_time,start,stop);
+        System.out.printf("Time = %g ms .\n",elapsed_time);
+
         ICuda.cudaDeviceSynchronize();
         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("double")*10);
         System.out.printf("x sum:  %f \n",$b[0]);
