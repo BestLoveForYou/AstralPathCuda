@@ -24,18 +24,30 @@ public interface ICuda {
     int blockDimz = 0;
 
     /**
-     * 这些是Cuda和C语言提供的部分函数
+     * 内存开辟函数
      */
     static <T> T malloc(int t) {return null;}
+    //默认的主机指针的内存开辟函数
     static <T> void cudaMalloc(T s, int t) {}
+    //显卡上的全局内存指针内存开辟函数
     static <T> void cudaMallocHost(T s, int t) {}
+    //显卡不可分页内存开辟函数,用于CUDA流
     static <T> void cudaHostAlloc(T s, int t,T flags) {}
+    //显卡不可分页内存开辟函数,用于CUDA流
     static <T> T calloc(int n, int size) {return null;}
-
+    //默认的主机指针的内存开辟函数
     static void free(Object... o) {}
+    //默认的主机指针的内存释放函数
     static void cudaFree(Object... o) {}
+    //显卡指针内存释放函数
     static void cudaFreeHost(Object... o) {}
+    //显存不可分页内存释放函数
 
+    /**
+     * 显卡数学函数
+     * @param x
+     * @return
+     */
     static float sqrt(float x) {return 1.0F;}
     static float sqrtf(float x) {return 1.0F;}
     static double sqrt(double x) {return 1.0;}
@@ -48,6 +60,13 @@ public interface ICuda {
     static double __fsqrt_ru(double x) {return 1.0;}
     static double __fsqrt_rz(double x) {return 1.0;}
 
+    /**
+     * 显卡原子函数
+     * @param address
+     * @param val
+     * @return
+     * @param <T>
+     */
     static <T> T atomicAdd(T address, T val) {return null;}
     static <T> T atomicSub(T address, T val) {return null;}
     static <T> T atomicExch(T address, T val) {return null;}
@@ -59,29 +78,70 @@ public interface ICuda {
     static <T> T atomicAnd(T address, T val) {return null;}
     static <T> T atomicOr(T address, T val) {return null;}
     static <T> T atomicXor(T address, T val) {return null;}
+    /**
+     * 一下是一些在主机,设备之间数据传递的枚举类型
+     *
+     */
     cudaMemcpyKind cudaMemcpyHostToHost = null;
     cudaMemcpyKind cudaMemcpyHostToDevice = null;
     cudaMemcpyKind cudaMemcpyDeviceToHost = null;
     cudaMemcpyKind cudaMemcpyDeviceToDevice = null;
     cudaMemcpyKind cudaMemcpyDefault = null;
-    static cudaError_t cudaMemcpy(final String symbol, final String src, int count,cudaMemcpyKind fromto){return null;}
-    static cudaError_t cudaMemcpyToSymbol(final String symbol, final String src, int count){return null;}
-    static cudaError_t cudaMemcpyFromSymbol(final String src,final String symbol,int count){return null;}
 
+    /**
+     * 用于动态全局内存传递
+     * @param symbol    动态全局内存变量名
+     * @param src       主机内存缓冲区指针
+     * @param count     复制的字节数
+     * @param kind      传递方向
+     * @return
+     */
+    static cudaError_t cudaMemcpy(final String symbol, final String src, int count,cudaMemcpyKind kind){return null;}
+    /**
+     *
+     * @param symbol    静态全局内存变量名
+     * @param src       主机内存缓冲区指针
+     * @param count     复制的字节数
+     *        kind      可选参数
+     * @return
+     */
+    static cudaError_t cudaMemcpyToSymbol(final String symbol, final String src, int count){return null;}
+    static cudaError_t cudaMemcpyToSymbol(final String symbol, final String src, int count,cudaMemcpyKind kind){return null;}
+
+    /**
+     *
+     * @param src       主机内存缓冲区指针
+     * @param symbol    静态全局内存变量名
+     * @param count     复制的字节数
+     *        kind      可选参数
+     * @return
+     */
+    static cudaError_t cudaMemcpyFromSymbol(final String src,final String symbol,int count){return null;}
+    static cudaError_t cudaMemcpyFromSymbol(final String src,final String symbol,int count,cudaMemcpyKind kind){return null;}
     static <T> T cudaMemcpyAsync (String dst,String src,T count,cudaMemcpyKind kind,cudaStream_t stream) {return null;}
 
-
+    /**
+     *
+     */
     static void __syncthreads(){}//线程同步
     static void __syncwarp(){}//线程束同步
     /**
-     * 计时
+     * 计时操作
      */
-    static cudaError_t cudaEventCreate(cudaEvent_t cudaEventT) {return null;}
-    static cudaError_t cudaEventRecord(cudaEvent_t cudaEventT) {return null;}
-    static cudaError_t cudaEventQuery(cudaEvent_t cudaEventT) {return null;}
-    static cudaError_t cudaEventSynchronize(cudaEvent_t cudaEventT) {return null;}
+    static cudaError_t cudaEventCreate(cudaEvent_t cudaEventT) {return null;}//初始化cudaEventT事件
+    static cudaError_t cudaEventRecord(cudaEvent_t cudaEventT) {return null;}//结束cudaEventT事件
+    static cudaError_t cudaEventQuery(cudaEvent_t cudaEventT) {return null;}//刷新队列
+    static cudaError_t cudaEventSynchronize(cudaEvent_t cudaEventT) {return null;}//让主机等待cudaEventT计时结束
+
+    /**
+     * 计算时间差
+     * @param elapsed       输出
+     * @param cudaEventT    开始时间
+     * @param cudaEventT2   结束时间
+     * @return
+     */
     static cudaError_t cudaEventElapsedTime(float elapsed,cudaEvent_t cudaEventT,cudaEvent_t cudaEventT2) {return null;}
-    static cudaError_t cudaEventDestroy(cudaEvent_t cudaEventT) {return null;}
+    static cudaError_t cudaEventDestroy(cudaEvent_t cudaEventT) {return null;}//销毁
     /**
      * 随机数
      */
@@ -154,14 +214,14 @@ public interface ICuda {
     static <T> void cudaGetSymbolAddress(T devPtr,T symbol) {}
 
     /**
-     * 流
+     * CUDA流
      */
     static void cudaStreamCreate(cudaStream_t c) {}
     static void cudaStreamDestroy(cudaStream_t c) {}
     static cudaError_t cudaStreamSynchronize(cudaStream_t c) {return new cudaError_t();}
     static cudaError_t cudaStreamQuery(cudaStream_t c) {return new cudaError_t();}
     /**
-     * 线程数
+     * 线程束
      * @param mask
      * @param predicate
      * @return

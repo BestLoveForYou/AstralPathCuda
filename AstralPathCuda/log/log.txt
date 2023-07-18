@@ -11973,3 +11973,55 @@ D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307182223.cu(5): wa
 [INFO 2023-07-18 10:40:59 ](Java2Cuda)耗时: 0 ms  -> 
 [INFO 2023-07-18 10:40:59 ](Java2Cuda)耗时: 1 ms         ICuda.cudaFree($d_y1); ->         cudaFree(d_y1);
 [INFO 2023-07-18 10:40:59 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-18 11:30:40 ]-------------------------新纪录--------------------------
+[INFO 2023-07-18 11:30:40 ]使用版本:v1.2023.0621.10
+[INFO 2023-07-18 11:30:40 ]核函数数:2
+[INFO 2023-07-18 11:30:40 ]设备函数数:1
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 3 ms      final int N = 100;//global ->      const int N = 100;//global
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 2 ms __device__add(int[] $a,int[] $b,int[] $z)(GLOBAL) -> add(int *a,int *b,int *z)
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms         $z[threadIdxx] = $a[threadIdxx]+ $b[threadIdxx]; ->         z[threadIdx.x] = a[threadIdx.x]+ b[threadIdx.x];
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms } -> }
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms hello(int[] $h,int[] $b,int[] $z)(GLOBAL) -> hello(int *h,int *b,int *z)
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         int n = threadIdxx; ->         int n = threadIdx.x;
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms         __device__add($h,$b,$z); ->         add(h,b,z);
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms         System.out.printf("(%d,%d) = %d \n",threadIdxx,threadIdxy,$z[n]); ->         printf("(%d,%d) = %d \n",threadIdx.x,threadIdx.y,z[n]);
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms         $b[n] = $h[n]; ->         b[n] = h[n];
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms } -> }
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms hello2(int[] $h,int[] $b,int[] $z)(GLOBAL) -> hello2(int *h,int *b,int *z)
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 7 ms         int n = threadIdxx; ->         int n = threadIdx.x;
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         __device__add($h,$b,$z); ->         add(h,b,z);
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         System.out.printf("(%d,%d) = %d \n",threadIdxx,threadIdxy,$z[n]); ->         printf("(%d,%d) = %d \n",threadIdx.x,threadIdx.y,z[n]);
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         $b[n] = $h[n]; ->         b[n] = h[n];
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 2 ms  -> 
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms } -> }
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         int M = ICuda.sizeof("int")*N; ->         int M = sizeof(int)*N;
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms         int[] $h_x = ICuda.malloc(M); ->         int *h_x = (int *) malloc(M);
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         for (int x = 0;x < N;x ++) { ->         for (int x = 0;x < N;x ++) {
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms             $h_x[x] = 1; ->             h_x[x] = 1;
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms         } ->         }
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms         int[] $d_x1 = {}; ->         int *d_x1;
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         int[] $d_y1 = {}; ->         int *d_y1;
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         int[] $d_y2 = {}; ->         int *d_y2;
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("d_x1",M); ->         cudaMalloc((void **)&d_x1,M);
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms         ICuda.cudaMemcpy("d_x1","h_x",M,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x1,h_x,M,cudaMemcpyHostToDevice);
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms         ICuda.cudaMalloc("d_y1",M); ->         cudaMalloc((void **)&d_y1,M);
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("d_y1","h_x",M,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_y1,h_x,M,cudaMemcpyHostToDevice);
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("d_y2",M); ->         cudaMalloc((void **)&d_y2,M);
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms  -> 
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms         __global__hello($d_x1,$d_y1,$d_y2); ->         hello<<<grid_size,block_size>>>(d_x1,d_y1,d_y2);
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("h_x","d_y1",M,cudaMemcpyDeviceToHost); ->         cudaMemcpy(h_x,d_y1,M,cudaMemcpyDeviceToHost);
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms         ICuda.free($h_x); ->         free(h_x);
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         ICuda.cudaFree($d_x1); ->         cudaFree(d_x1);
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms  -> 
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         ICuda.cudaFree($d_y1); ->         cudaFree(d_y1);
+[INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms  -> 

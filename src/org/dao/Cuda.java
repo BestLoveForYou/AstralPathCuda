@@ -37,6 +37,7 @@ public class Cuda {
         List<String> dreturn = new ArrayList<>();
         String contentLine = br.readLine();
         int device=0;
+        int global2 = 0;
         for (int x = 0 ;contentLine != null; x ++) {
             if (contentLine.contains("curandGenerator")) {
                 cnRAND = true;
@@ -64,7 +65,6 @@ public class Cuda {
                     Memorymap.put(contentLine.substring(contentLine.indexOf("public ") + 7, contentLine.indexOf("_") - 1), contentLine.substring(contentLine.indexOf("__device__")));
                 }
             }
-            int global = 0;
             if (contentLine.contains("__global__")) {
                 gpurun.add(contentLine.substring(contentLine.indexOf("__global__") + 10,contentLine.lastIndexOf(" {")));
                 canshu.add(contentLine.substring(contentLine.indexOf("("),contentLine.lastIndexOf(")")));
@@ -77,8 +77,8 @@ public class Cuda {
                         break;
                     }
                 }
-                gev.put(global,kernelmap);
-                global++;
+                gev.put(global2,kernelmap);
+                global2++;
             }
             if (contentLine.contains("//global")) {
                 glovarmap.put(glovarmap.size() + 1,contentLine);

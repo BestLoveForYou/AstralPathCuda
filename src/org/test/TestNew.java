@@ -16,7 +16,13 @@ public class TestNew implements ICuda {
         $b[n] = $h[n];
 
     }//End
+    public void __global__hello2(int[] $h,int[] $b,int[] $z) {
+        int n = threadIdxx;
+        __device__add($h,$b,$z);
+        System.out.printf("(%d,%d) = %d \n",threadIdxx,threadIdxy,$z[n]);
+        $b[n] = $h[n];
 
+    }//End
 
     @Override
     public void main() {
