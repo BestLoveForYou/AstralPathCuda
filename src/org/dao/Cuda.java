@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Cuda {
-    private final String VERSION = "v1.2023.0621.10";
+    private final String VERSION = "v1.2023.0719.11";
     private static String exename = "astralpathcuda.exe";
     private String parameter;
     private static boolean cnRAND = false;
