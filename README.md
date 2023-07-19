@@ -1,5 +1,5 @@
-AstralPathCuda Documentation
-2023-07-19, Wednesday
+# AstralPathCuda Documentation
+2023-07-19, Wednesday 00:03:46
 
 ## Introduction
 The **AstralPathCuda** project is a toolkit for GPU development in Java, developed by AstralPath Studio. It provides extensive functionality for CUDA development in Java and is particularly useful for scientific computing. With AstralPathCuda, Java programmers can develop complete CUDA programs quickly without the need for C language knowledge.
@@ -418,7 +418,7 @@ static <T> void curandGenerateUniformDouble(curandGenerator_t c, T memory, int N
 
 ---
 
-# Changelog:
+# Update Log:
 ### v1.2023.0719.11
 - Abolished the option to omit the //End tag
 - Fixed several usage vulnerabilities in device functions
