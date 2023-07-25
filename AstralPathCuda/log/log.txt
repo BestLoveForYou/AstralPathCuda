@@ -12025,3 +12025,1650 @@ D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307182223.cu(5): wa
 [INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 1 ms  -> 
 [INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms         ICuda.cudaFree($d_y1); ->         cudaFree(d_y1);
 [INFO 2023-07-18 11:30:40 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:17 ]-------------------------新纪录--------------------------
+[INFO 2023-07-22 11:25:17 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-22 11:25:17 ]核函数数:1
+[INFO 2023-07-22 11:25:17 ]设备函数数:0
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 1 ms      final int N = 1000;//global ->      const int N = 1000;//global
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 5 ms double[] __device__d_z;//length:10 -> double d_z[10] =  {};//length:10
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 2 ms sum(double[] $d_x,double[] $d_y)(GLOBAL) -> sum(double *d_x,double *d_y)
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 1 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 3 ms         double[] __shared__s_x = {};//length:128 -> __shared__ double __shared__s_x[128];
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         double[] __shared__s_x2 = {};//length:128 -> __shared__ double __shared__s_x2[128];
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 1 ms         double[] __shared__s_y = {};//length:128 -> __shared__ double __shared__s_y[128];
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         double[] __shared__s_xy = {};//length:128 -> __shared__ double __shared__s_xy[128];
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         double x = 0.0; ->         double x = 0.0;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         double y = 0.0; ->         double y = 0.0;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         double x2 = 0.0; ->         double x2 = 0.0;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 1 ms         double xy = 0.0; ->         double xy = 0.0;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         __shared__s_x[tid] = (n < N) ? $d_x[n] : 0.0; ->         __shared__s_x[tid] = (n < N) ? d_x[n] : 0.0;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         __shared__s_x2[tid] = (n < N) ? (__shared__s_x[tid] * __shared__s_x[tid]) : 0.0; ->         __shared__s_x2[tid] = (n < N) ? (__shared__s_x[tid] * __shared__s_x[tid]) : 0.0;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         __shared__s_y[tid] = (n < N) ? $d_y[n] : 0.0; ->         __shared__s_y[tid] = (n < N) ? d_y[n] : 0.0;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         __shared__s_xy[tid] = (n < N) ? __shared__s_x[tid] * __shared__s_y[tid] : 0.0; ->         __shared__s_xy[tid] = (n < N) ? __shared__s_x[tid] * __shared__s_y[tid] : 0.0;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms             { ->             {
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 2 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms                 __shared__s_y[tid] += __shared__s_y[tid + offset]; ->                 __shared__s_y[tid] += __shared__s_y[tid + offset];
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms                 __shared__s_x2[tid] += __shared__s_x2[tid + offset]; ->                 __shared__s_x2[tid] += __shared__s_x2[tid + offset];
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms                 __shared__s_xy[tid] += __shared__s_xy[tid + offset]; ->                 __shared__s_xy[tid] += __shared__s_xy[tid + offset];
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms             } ->             }
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         y = __shared__s_y[tid]; ->         y = __shared__s_y[tid];
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         x2 = __shared__s_x2[tid]; ->         x2 = __shared__s_x2[tid];
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         xy = __shared__s_xy[tid]; ->         xy = __shared__s_xy[tid];
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms             y += ICuda.__shfl_down_sync("0xffffffff",y, offset); ->             y += __shfl_down_sync(0xffffffff,y, offset);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 1 ms             x2 += ICuda.__shfl_down_sync("0xffffffff",x2, offset); ->             x2 += __shfl_down_sync(0xffffffff,x2, offset);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms             xy += ICuda.__shfl_down_sync("0xffffffff",xy, offset); ->             xy += __shfl_down_sync(0xffffffff,xy, offset);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[1], y); ->             atomicAdd(&d_z[1], y);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 1 ms             ICuda.atomicAdd(__device__d_z[2], x2); ->             atomicAdd(&d_z[2], x2);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[3], xy); ->             atomicAdd(&d_z[3], xy);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         if(n == 0) { ->         if(n == 0) {
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms             double fenzi = __device__d_z[3] - (__device__d_z[0] * __device__d_z[1] / N); ->             double fenzi = d_z[3] - (d_z[0] * d_z[1] / N);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms             double fenmu = __device__d_z[2] - (__device__d_z[0] * __device__d_z[0] / N); ->             double fenmu = d_z[2] - (d_z[0] * d_z[0] / N);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms             __device__d_z[4] = fenzi / fenmu; ->             d_z[4] = fenzi / fenmu;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms             __device__d_z[5] = (__device__d_z[1] / N) - ((__device__d_z[0] / N) * __device__d_z[4]); ->             d_z[5] = (d_z[1] / N) - ((d_z[0] / N) * d_z[4]);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms     } ->     }
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms     @Override ->     @Override
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms     public void main() { ->     __device__ void main() {
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         double[] $a = ICuda.malloc(ICuda.sizeof("double")*N); ->         double *a = (double *) malloc(sizeof(double)*N);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         double[] $a2 = ICuda.malloc(ICuda.sizeof("double")*N); ->         double *a2 = (double *) malloc(sizeof(double)*N);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 1 ms         double[] $b = ICuda.malloc(ICuda.sizeof("double")*10); ->         double *b = (double *) malloc(sizeof(double)*10);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms             $a[x] = 14.21412 + 1.1245 * x; ->             a[x] = 14.21412 + 1.1245 * x;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms             $a2[x] = 124.21452 + 123.0523 * x; ->             a2[x] = 124.21452 + 123.0523 * x;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         double[] $d_x = {}; ->         double *d_x;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         double[] $d_y = {}; ->         double *d_y;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 1 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("double")*N); ->         cudaMalloc((void **)&d_x,sizeof(double)*N);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_y",ICuda.sizeof("double")*N); ->         cudaMalloc((void **)&d_y,sizeof(double)*N);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("double")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(double)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_y","$a2",ICuda.sizeof("double")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_y,a2,sizeof(double)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         __global__sum($d_x,$d_y); ->         sum<<<grid_size,block_size>>>(d_x,d_y);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         System.out.printf("Time = %g ms .\n",elapsed_time); ->         printf("Time = %g ms .\n",elapsed_time);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 1 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("double")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(double)*10);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         System.out.printf("x sum:  %f \n",$b[0]); ->         printf("x sum:  %f \n",b[0]);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         System.out.printf("y sum: %f \n",$b[1]); ->         printf("y sum: %f \n",b[1]);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         System.out.printf("x2 sum: %f \n",$b[2]); ->         printf("x2 sum: %f \n",b[2]);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         System.out.printf("xy sum: %f \n",$b[3]); ->         printf("xy sum: %f \n",b[3]);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms         System.out.printf("Result: y =  %f * x + (%f) \n",$b[4],$b[5]); ->         printf("Result: y =  %f * x + (%f) \n",b[4],b[5]);
+[INFO 2023-07-22 11:25:17 ](Java2Cuda)耗时: 0 ms } -> }
+[ERROR 2023-07-22 11:25:17 ]D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(67): error: unrecognized token
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(67): error: expected a declaration
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(90): warning #12-D: parsing restarts here after previous syntax error
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(92): error: this declaration has no storage class or type specifier
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(92): error: declaration is incompatible with "cudaError_t cudaEventRecord(cudaEvent_t, cudaStream_t)"
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\include\cuda_device_runtime_api.h(153): here
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(92): error: identifier "stop" is undefined
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(93): error: this declaration has no storage class or type specifier
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(93): error: declaration is incompatible with "cudaError_t cudaEventSynchronize(cudaEvent_t)"
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\include\cuda_runtime_api.h(3257): here
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(95): error: this declaration has no storage class or type specifier
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(95): error: declaration is incompatible with "cudaError_t cudaEventElapsedTime(float *, cudaEvent_t, cudaEvent_t)"
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\include\cuda_runtime_api.h(3330): here
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(95): error: identifier "start" is undefined
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(95): error: too many initializer values
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(95): error: a value of type "float *" cannot be used to initialize an entity of type "int"
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(96): error: this declaration has no storage class or type specifier
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(96): error: declaration is incompatible with "int printf(const char *, ...)"
+C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt\stdio.h(950): here
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(96): error: too many initializer values
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(96): error: a value of type "const char *" cannot be used to initialize an entity of type "int"
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(98): error: explicit type is missing ("int" assumed)
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(98): error: cannot overload functions distinguished by return type alone
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(99): error: this declaration has no storage class or type specifier
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(99): error: declaration is incompatible with overloaded function "cudaMemcpyFromSymbol"
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\include\cuda_runtime_api.h(6583): here
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(99): error: identifier "b" is undefined
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(99): error: too many initializer values
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(100): error: this declaration has no storage class or type specifier
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(100): error: variable "printf" has already been defined
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(100): error: too many initializer values
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(100): error: a value of type "const char *" cannot be used to initialize an entity of type "int"
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(101): error: this declaration has no storage class or type specifier
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(101): error: variable "printf" has already been defined
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(101): error: too many initializer values
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(101): error: a value of type "const char *" cannot be used to initialize an entity of type "int"
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(102): error: this declaration has no storage class or type specifier
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(102): error: variable "printf" has already been defined
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(102): error: too many initializer values
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(102): error: a value of type "const char *" cannot be used to initialize an entity of type "int"
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(103): error: this declaration has no storage class or type specifier
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(103): error: variable "printf" has already been defined
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(103): error: too many initializer values
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(103): error: a value of type "const char *" cannot be used to initialize an entity of type "int"
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(104): error: this declaration has no storage class or type specifier
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(104): error: variable "printf" has already been defined
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(104): error: too many initializer values
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(104): error: a value of type "const char *" cannot be used to initialize an entity of type "int"
+
+D:\idea_astralpathtalk\AstralPathCuda\AstralPathCuda\temp\202307222325.cu(105): error: expected a declaration
+
+43 errors detected in the compilation of "D:/idea_astralpathtalk/AstralPathCuda/AstralPathCuda//temp/202307222325.cu".
+202307222325.cu
+
+[INFO 2023-07-22 11:25:47 ]-------------------------新纪录--------------------------
+[INFO 2023-07-22 11:25:47 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-22 11:25:47 ]核函数数:1
+[INFO 2023-07-22 11:25:47 ]设备函数数:0
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms      final int N = 1000;//global ->      const int N = 1000;//global
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 6 ms double[] __device__d_z;//length:10 -> double d_z[10] =  {};//length:10
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms sum(double[] $d_x,double[] $d_y)(GLOBAL) -> sum(double *d_x,double *d_y)
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 1 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 3 ms         double[] __shared__s_x = {};//length:128 -> __shared__ double __shared__s_x[128];
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         double[] __shared__s_x2 = {};//length:128 -> __shared__ double __shared__s_x2[128];
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         double[] __shared__s_y = {};//length:128 -> __shared__ double __shared__s_y[128];
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 1 ms         double[] __shared__s_xy = {};//length:128 -> __shared__ double __shared__s_xy[128];
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         double x = 0.0; ->         double x = 0.0;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         double y = 0.0; ->         double y = 0.0;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         double x2 = 0.0; ->         double x2 = 0.0;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 1 ms         double xy = 0.0; ->         double xy = 0.0;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         __shared__s_x[tid] = (n < N) ? $d_x[n] : 0.0; ->         __shared__s_x[tid] = (n < N) ? d_x[n] : 0.0;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         __shared__s_x2[tid] = (n < N) ? (__shared__s_x[tid] * __shared__s_x[tid]) : 0.0; ->         __shared__s_x2[tid] = (n < N) ? (__shared__s_x[tid] * __shared__s_x[tid]) : 0.0;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         __shared__s_y[tid] = (n < N) ? $d_y[n] : 0.0; ->         __shared__s_y[tid] = (n < N) ? d_y[n] : 0.0;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         __shared__s_xy[tid] = (n < N) ? __shared__s_x[tid] * __shared__s_y[tid] : 0.0; ->         __shared__s_xy[tid] = (n < N) ? __shared__s_x[tid] * __shared__s_y[tid] : 0.0;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms             { ->             {
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms                 __shared__s_y[tid] += __shared__s_y[tid + offset]; ->                 __shared__s_y[tid] += __shared__s_y[tid + offset];
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms                 __shared__s_x2[tid] += __shared__s_x2[tid + offset]; ->                 __shared__s_x2[tid] += __shared__s_x2[tid + offset];
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms                 __shared__s_xy[tid] += __shared__s_xy[tid + offset]; ->                 __shared__s_xy[tid] += __shared__s_xy[tid + offset];
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms             } ->             }
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 1 ms  -> 
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         y = __shared__s_y[tid]; ->         y = __shared__s_y[tid];
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         x2 = __shared__s_x2[tid]; ->         x2 = __shared__s_x2[tid];
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         xy = __shared__s_xy[tid]; ->         xy = __shared__s_xy[tid];
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 1 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms             y += ICuda.__shfl_down_sync("0xffffffff",y, offset); ->             y += __shfl_down_sync(0xffffffff,y, offset);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms             x2 += ICuda.__shfl_down_sync("0xffffffff",x2, offset); ->             x2 += __shfl_down_sync(0xffffffff,x2, offset);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms             xy += ICuda.__shfl_down_sync("0xffffffff",xy, offset); ->             xy += __shfl_down_sync(0xffffffff,xy, offset);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 1 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[1], y); ->             atomicAdd(&d_z[1], y);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[2], x2); ->             atomicAdd(&d_z[2], x2);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[3], xy); ->             atomicAdd(&d_z[3], xy);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         if(n == 0) { ->         if(n == 0) {
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 2 ms             double fenzi = __device__d_z[3] - (__device__d_z[0] * __device__d_z[1] / N); ->             double fenzi = d_z[3] - (d_z[0] * d_z[1] / N);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms             double fenmu = __device__d_z[2] - (__device__d_z[0] * __device__d_z[0] / N); ->             double fenmu = d_z[2] - (d_z[0] * d_z[0] / N);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms             __device__d_z[4] = fenzi / fenmu; ->             d_z[4] = fenzi / fenmu;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms             __device__d_z[5] = (__device__d_z[1] / N) - ((__device__d_z[0] / N) * __device__d_z[4]); ->             d_z[5] = (d_z[1] / N) - ((d_z[0] / N) * d_z[4]);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms } -> }
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 1 ms         double[] $a = ICuda.malloc(ICuda.sizeof("double")*N); ->         double *a = (double *) malloc(sizeof(double)*N);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         double[] $a2 = ICuda.malloc(ICuda.sizeof("double")*N); ->         double *a2 = (double *) malloc(sizeof(double)*N);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         double[] $b = ICuda.malloc(ICuda.sizeof("double")*10); ->         double *b = (double *) malloc(sizeof(double)*10);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms             $a[x] = 14.21412 + 1.1245 * x; ->             a[x] = 14.21412 + 1.1245 * x;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms             $a2[x] = 124.21452 + 123.0523 * x; ->             a2[x] = 124.21452 + 123.0523 * x;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         double[] $d_x = {}; ->         double *d_x;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         double[] $d_y = {}; ->         double *d_y;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("double")*N); ->         cudaMalloc((void **)&d_x,sizeof(double)*N);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_y",ICuda.sizeof("double")*N); ->         cudaMalloc((void **)&d_y,sizeof(double)*N);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("double")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(double)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_y","$a2",ICuda.sizeof("double")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_y,a2,sizeof(double)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         __global__sum($d_x,$d_y); ->         sum<<<grid_size,block_size>>>(d_x,d_y);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         System.out.printf("Time = %g ms .\n",elapsed_time); ->         printf("Time = %g ms .\n",elapsed_time);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("double")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(double)*10);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         System.out.printf("x sum:  %f \n",$b[0]); ->         printf("x sum:  %f \n",b[0]);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 2 ms         System.out.printf("y sum: %f \n",$b[1]); ->         printf("y sum: %f \n",b[1]);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         System.out.printf("x2 sum: %f \n",$b[2]); ->         printf("x2 sum: %f \n",b[2]);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         System.out.printf("xy sum: %f \n",$b[3]); ->         printf("xy sum: %f \n",b[3]);
+[INFO 2023-07-22 11:25:47 ](Java2Cuda)耗时: 0 ms         System.out.printf("Result: y =  %f * x + (%f) \n",$b[4],$b[5]); ->         printf("Result: y =  %f * x + (%f) \n",b[4],b[5]);
+[INFO 2023-07-22 11:29:14 ]-------------------------新纪录--------------------------
+[INFO 2023-07-22 11:29:14 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-22 11:29:14 ]核函数数:1
+[INFO 2023-07-22 11:29:14 ]设备函数数:0
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 1 ms      final int N = 100000;//global ->      const int N = 100000;//global
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 7 ms double[] __device__d_z;//length:10 -> double d_z[10] =  {};//length:10
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 1 ms sum(double[] $d_x,double[] $d_y)(GLOBAL) -> sum(double *d_x,double *d_y)
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 1 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 3 ms         double[] __shared__s_x = {};//length:128 -> __shared__ double __shared__s_x[128];
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         double[] __shared__s_x2 = {};//length:128 -> __shared__ double __shared__s_x2[128];
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 1 ms         double[] __shared__s_y = {};//length:128 -> __shared__ double __shared__s_y[128];
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         double[] __shared__s_xy = {};//length:128 -> __shared__ double __shared__s_xy[128];
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 1 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         double x = 0.0; ->         double x = 0.0;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         double y = 0.0; ->         double y = 0.0;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         double x2 = 0.0; ->         double x2 = 0.0;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         double xy = 0.0; ->         double xy = 0.0;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         __shared__s_x[tid] = (n < N) ? $d_x[n] : 0.0; ->         __shared__s_x[tid] = (n < N) ? d_x[n] : 0.0;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 2 ms         __shared__s_x2[tid] = (n < N) ? (__shared__s_x[tid] * __shared__s_x[tid]) : 0.0; ->         __shared__s_x2[tid] = (n < N) ? (__shared__s_x[tid] * __shared__s_x[tid]) : 0.0;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         __shared__s_y[tid] = (n < N) ? $d_y[n] : 0.0; ->         __shared__s_y[tid] = (n < N) ? d_y[n] : 0.0;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         __shared__s_xy[tid] = (n < N) ? __shared__s_x[tid] * __shared__s_y[tid] : 0.0; ->         __shared__s_xy[tid] = (n < N) ? __shared__s_x[tid] * __shared__s_y[tid] : 0.0;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 1 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 1 ms             { ->             {
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms                 __shared__s_y[tid] += __shared__s_y[tid + offset]; ->                 __shared__s_y[tid] += __shared__s_y[tid + offset];
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms                 __shared__s_x2[tid] += __shared__s_x2[tid + offset]; ->                 __shared__s_x2[tid] += __shared__s_x2[tid + offset];
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 1 ms                 __shared__s_xy[tid] += __shared__s_xy[tid + offset]; ->                 __shared__s_xy[tid] += __shared__s_xy[tid + offset];
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms             } ->             }
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         y = __shared__s_y[tid]; ->         y = __shared__s_y[tid];
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 1 ms         x2 = __shared__s_x2[tid]; ->         x2 = __shared__s_x2[tid];
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         xy = __shared__s_xy[tid]; ->         xy = __shared__s_xy[tid];
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms             y += ICuda.__shfl_down_sync("0xffffffff",y, offset); ->             y += __shfl_down_sync(0xffffffff,y, offset);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 2 ms             x2 += ICuda.__shfl_down_sync("0xffffffff",x2, offset); ->             x2 += __shfl_down_sync(0xffffffff,x2, offset);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms             xy += ICuda.__shfl_down_sync("0xffffffff",xy, offset); ->             xy += __shfl_down_sync(0xffffffff,xy, offset);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 1 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[1], y); ->             atomicAdd(&d_z[1], y);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[2], x2); ->             atomicAdd(&d_z[2], x2);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[3], xy); ->             atomicAdd(&d_z[3], xy);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 1 ms         } ->         }
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         if(n == 0) { ->         if(n == 0) {
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms             double fenzi = __device__d_z[3] - (__device__d_z[0] * __device__d_z[1] / N); ->             double fenzi = d_z[3] - (d_z[0] * d_z[1] / N);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms             double fenmu = __device__d_z[2] - (__device__d_z[0] * __device__d_z[0] / N); ->             double fenmu = d_z[2] - (d_z[0] * d_z[0] / N);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms             __device__d_z[4] = fenzi / fenmu; ->             d_z[4] = fenzi / fenmu;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms             __device__d_z[5] = (__device__d_z[1] / N) - ((__device__d_z[0] / N) * __device__d_z[4]); ->             d_z[5] = (d_z[1] / N) - ((d_z[0] / N) * d_z[4]);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms } -> }
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         double[] $a = ICuda.malloc(ICuda.sizeof("double")*N); ->         double *a = (double *) malloc(sizeof(double)*N);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         double[] $a2 = ICuda.malloc(ICuda.sizeof("double")*N); ->         double *a2 = (double *) malloc(sizeof(double)*N);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         double[] $b = ICuda.malloc(ICuda.sizeof("double")*10); ->         double *b = (double *) malloc(sizeof(double)*10);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms             $a[x] = 14.21412 + 1.1245 * x; ->             a[x] = 14.21412 + 1.1245 * x;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms             $a2[x] = 124.21452 + 123.0523 * x; ->             a2[x] = 124.21452 + 123.0523 * x;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         double[] $d_x = {}; ->         double *d_x;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         double[] $d_y = {}; ->         double *d_y;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("double")*N); ->         cudaMalloc((void **)&d_x,sizeof(double)*N);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_y",ICuda.sizeof("double")*N); ->         cudaMalloc((void **)&d_y,sizeof(double)*N);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("double")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(double)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_y","$a2",ICuda.sizeof("double")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_y,a2,sizeof(double)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 1 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         __global__sum($d_x,$d_y); ->         sum<<<grid_size,block_size>>>(d_x,d_y);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         System.out.printf("Time = %g ms .\n",elapsed_time); ->         printf("Time = %g ms .\n",elapsed_time);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("double")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(double)*10);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         System.out.printf("x sum:  %f \n",$b[0]); ->         printf("x sum:  %f \n",b[0]);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         System.out.printf("y sum: %f \n",$b[1]); ->         printf("y sum: %f \n",b[1]);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         System.out.printf("x2 sum: %f \n",$b[2]); ->         printf("x2 sum: %f \n",b[2]);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 1 ms         System.out.printf("xy sum: %f \n",$b[3]); ->         printf("xy sum: %f \n",b[3]);
+[INFO 2023-07-22 11:29:14 ](Java2Cuda)耗时: 0 ms         System.out.printf("Result: y =  %f * x + (%f) \n",$b[4],$b[5]); ->         printf("Result: y =  %f * x + (%f) \n",b[4],b[5]);
+[INFO 2023-07-22 11:29:34 ]-------------------------新纪录--------------------------
+[INFO 2023-07-22 11:29:34 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-22 11:29:34 ]核函数数:1
+[INFO 2023-07-22 11:29:34 ]设备函数数:0
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms      final int N = 10000000;//global ->      const int N = 10000000;//global
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 7 ms double[] __device__d_z;//length:10 -> double d_z[10] =  {};//length:10
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 1 ms sum(double[] $d_x,double[] $d_y)(GLOBAL) -> sum(double *d_x,double *d_y)
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 3 ms         double[] __shared__s_x = {};//length:128 -> __shared__ double __shared__s_x[128];
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         double[] __shared__s_x2 = {};//length:128 -> __shared__ double __shared__s_x2[128];
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         double[] __shared__s_y = {};//length:128 -> __shared__ double __shared__s_y[128];
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         double[] __shared__s_xy = {};//length:128 -> __shared__ double __shared__s_xy[128];
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 1 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         double x = 0.0; ->         double x = 0.0;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         double y = 0.0; ->         double y = 0.0;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         double x2 = 0.0; ->         double x2 = 0.0;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         double xy = 0.0; ->         double xy = 0.0;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 1 ms         __shared__s_x[tid] = (n < N) ? $d_x[n] : 0.0; ->         __shared__s_x[tid] = (n < N) ? d_x[n] : 0.0;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         __shared__s_x2[tid] = (n < N) ? (__shared__s_x[tid] * __shared__s_x[tid]) : 0.0; ->         __shared__s_x2[tid] = (n < N) ? (__shared__s_x[tid] * __shared__s_x[tid]) : 0.0;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         __shared__s_y[tid] = (n < N) ? $d_y[n] : 0.0; ->         __shared__s_y[tid] = (n < N) ? d_y[n] : 0.0;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         __shared__s_xy[tid] = (n < N) ? __shared__s_x[tid] * __shared__s_y[tid] : 0.0; ->         __shared__s_xy[tid] = (n < N) ? __shared__s_x[tid] * __shared__s_y[tid] : 0.0;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 1 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms             { ->             {
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 2 ms                 __shared__s_y[tid] += __shared__s_y[tid + offset]; ->                 __shared__s_y[tid] += __shared__s_y[tid + offset];
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms                 __shared__s_x2[tid] += __shared__s_x2[tid + offset]; ->                 __shared__s_x2[tid] += __shared__s_x2[tid + offset];
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms                 __shared__s_xy[tid] += __shared__s_xy[tid + offset]; ->                 __shared__s_xy[tid] += __shared__s_xy[tid + offset];
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms             } ->             }
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         y = __shared__s_y[tid]; ->         y = __shared__s_y[tid];
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         x2 = __shared__s_x2[tid]; ->         x2 = __shared__s_x2[tid];
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         xy = __shared__s_xy[tid]; ->         xy = __shared__s_xy[tid];
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 1 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms             y += ICuda.__shfl_down_sync("0xffffffff",y, offset); ->             y += __shfl_down_sync(0xffffffff,y, offset);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms             x2 += ICuda.__shfl_down_sync("0xffffffff",x2, offset); ->             x2 += __shfl_down_sync(0xffffffff,x2, offset);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 1 ms             xy += ICuda.__shfl_down_sync("0xffffffff",xy, offset); ->             xy += __shfl_down_sync(0xffffffff,xy, offset);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 1 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[1], y); ->             atomicAdd(&d_z[1], y);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[2], x2); ->             atomicAdd(&d_z[2], x2);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[3], xy); ->             atomicAdd(&d_z[3], xy);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         if(n == 0) { ->         if(n == 0) {
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms             double fenzi = __device__d_z[3] - (__device__d_z[0] * __device__d_z[1] / N); ->             double fenzi = d_z[3] - (d_z[0] * d_z[1] / N);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms             double fenmu = __device__d_z[2] - (__device__d_z[0] * __device__d_z[0] / N); ->             double fenmu = d_z[2] - (d_z[0] * d_z[0] / N);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms             __device__d_z[4] = fenzi / fenmu; ->             d_z[4] = fenzi / fenmu;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms             __device__d_z[5] = (__device__d_z[1] / N) - ((__device__d_z[0] / N) * __device__d_z[4]); ->             d_z[5] = (d_z[1] / N) - ((d_z[0] / N) * d_z[4]);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms } -> }
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 1 ms         double[] $a = ICuda.malloc(ICuda.sizeof("double")*N); ->         double *a = (double *) malloc(sizeof(double)*N);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         double[] $a2 = ICuda.malloc(ICuda.sizeof("double")*N); ->         double *a2 = (double *) malloc(sizeof(double)*N);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         double[] $b = ICuda.malloc(ICuda.sizeof("double")*10); ->         double *b = (double *) malloc(sizeof(double)*10);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 1 ms             $a[x] = 14.21412 + 1.1245 * x; ->             a[x] = 14.21412 + 1.1245 * x;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms             $a2[x] = 124.21452 + 123.0523 * x; ->             a2[x] = 124.21452 + 123.0523 * x;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         double[] $d_x = {}; ->         double *d_x;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         double[] $d_y = {}; ->         double *d_y;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("double")*N); ->         cudaMalloc((void **)&d_x,sizeof(double)*N);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_y",ICuda.sizeof("double")*N); ->         cudaMalloc((void **)&d_y,sizeof(double)*N);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("double")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(double)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_y","$a2",ICuda.sizeof("double")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_y,a2,sizeof(double)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         __global__sum($d_x,$d_y); ->         sum<<<grid_size,block_size>>>(d_x,d_y);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         System.out.printf("Time = %g ms .\n",elapsed_time); ->         printf("Time = %g ms .\n",elapsed_time);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("double")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(double)*10);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         System.out.printf("x sum:  %f \n",$b[0]); ->         printf("x sum:  %f \n",b[0]);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         System.out.printf("y sum: %f \n",$b[1]); ->         printf("y sum: %f \n",b[1]);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         System.out.printf("x2 sum: %f \n",$b[2]); ->         printf("x2 sum: %f \n",b[2]);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         System.out.printf("xy sum: %f \n",$b[3]); ->         printf("xy sum: %f \n",b[3]);
+[INFO 2023-07-22 11:29:34 ](Java2Cuda)耗时: 0 ms         System.out.printf("Result: y =  %f * x + (%f) \n",$b[4],$b[5]); ->         printf("Result: y =  %f * x + (%f) \n",b[4],b[5]);
+[INFO 2023-07-22 11:30:33 ]-------------------------新纪录--------------------------
+[INFO 2023-07-22 11:30:33 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-22 11:30:33 ]核函数数:1
+[INFO 2023-07-22 11:30:33 ]设备函数数:0
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms      final int N = 100000;//global ->      const int N = 100000;//global
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 7 ms double[] __device__d_z;//length:10 -> double d_z[10] =  {};//length:10
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 1 ms sum(double[] $d_x,double[] $d_y)(GLOBAL) -> sum(double *d_x,double *d_y)
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 4 ms         double[] __shared__s_x = {};//length:128 -> __shared__ double __shared__s_x[128];
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         double[] __shared__s_x2 = {};//length:128 -> __shared__ double __shared__s_x2[128];
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         double[] __shared__s_y = {};//length:128 -> __shared__ double __shared__s_y[128];
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 1 ms         double[] __shared__s_xy = {};//length:128 -> __shared__ double __shared__s_xy[128];
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         double x = 0.0; ->         double x = 0.0;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 1 ms         double y = 0.0; ->         double y = 0.0;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         double x2 = 0.0; ->         double x2 = 0.0;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         double xy = 0.0; ->         double xy = 0.0;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         __shared__s_x[tid] = (n < N) ? $d_x[n] : 0.0; ->         __shared__s_x[tid] = (n < N) ? d_x[n] : 0.0;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 1 ms         __shared__s_x2[tid] = (n < N) ? (__shared__s_x[tid] * __shared__s_x[tid]) : 0.0; ->         __shared__s_x2[tid] = (n < N) ? (__shared__s_x[tid] * __shared__s_x[tid]) : 0.0;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         __shared__s_y[tid] = (n < N) ? $d_y[n] : 0.0; ->         __shared__s_y[tid] = (n < N) ? d_y[n] : 0.0;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         __shared__s_xy[tid] = (n < N) ? __shared__s_x[tid] * __shared__s_y[tid] : 0.0; ->         __shared__s_xy[tid] = (n < N) ? __shared__s_x[tid] * __shared__s_y[tid] : 0.0;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 1 ms             { ->             {
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms                 __shared__s_y[tid] += __shared__s_y[tid + offset]; ->                 __shared__s_y[tid] += __shared__s_y[tid + offset];
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms                 __shared__s_x2[tid] += __shared__s_x2[tid + offset]; ->                 __shared__s_x2[tid] += __shared__s_x2[tid + offset];
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms                 __shared__s_xy[tid] += __shared__s_xy[tid + offset]; ->                 __shared__s_xy[tid] += __shared__s_xy[tid + offset];
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms             } ->             }
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 1 ms         y = __shared__s_y[tid]; ->         y = __shared__s_y[tid];
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         x2 = __shared__s_x2[tid]; ->         x2 = __shared__s_x2[tid];
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         xy = __shared__s_xy[tid]; ->         xy = __shared__s_xy[tid];
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 1 ms             y += ICuda.__shfl_down_sync("0xffffffff",y, offset); ->             y += __shfl_down_sync(0xffffffff,y, offset);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms             x2 += ICuda.__shfl_down_sync("0xffffffff",x2, offset); ->             x2 += __shfl_down_sync(0xffffffff,x2, offset);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms             xy += ICuda.__shfl_down_sync("0xffffffff",xy, offset); ->             xy += __shfl_down_sync(0xffffffff,xy, offset);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 1 ms  -> 
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 1 ms             ICuda.atomicAdd(__device__d_z[1], y); ->             atomicAdd(&d_z[1], y);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[2], x2); ->             atomicAdd(&d_z[2], x2);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[3], xy); ->             atomicAdd(&d_z[3], xy);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         if(n == 0) { ->         if(n == 0) {
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 1 ms             double fenzi = __device__d_z[3] - (__device__d_z[0] * __device__d_z[1] / N); ->             double fenzi = d_z[3] - (d_z[0] * d_z[1] / N);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms             double fenmu = __device__d_z[2] - (__device__d_z[0] * __device__d_z[0] / N); ->             double fenmu = d_z[2] - (d_z[0] * d_z[0] / N);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms             __device__d_z[4] = fenzi / fenmu; ->             d_z[4] = fenzi / fenmu;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms             __device__d_z[5] = (__device__d_z[1] / N) - ((__device__d_z[0] / N) * __device__d_z[4]); ->             d_z[5] = (d_z[1] / N) - ((d_z[0] / N) * d_z[4]);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms } -> }
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 1 ms         double[] $a = ICuda.malloc(ICuda.sizeof("double")*N); ->         double *a = (double *) malloc(sizeof(double)*N);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         double[] $a2 = ICuda.malloc(ICuda.sizeof("double")*N); ->         double *a2 = (double *) malloc(sizeof(double)*N);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         double[] $b = ICuda.malloc(ICuda.sizeof("double")*10); ->         double *b = (double *) malloc(sizeof(double)*10);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms             $a[x] = 14.21412 + 1.1245 * x; ->             a[x] = 14.21412 + 1.1245 * x;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms             $a2[x] = 124.21452 + 123.0523 * x; ->             a2[x] = 124.21452 + 123.0523 * x;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         double[] $d_x = {}; ->         double *d_x;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         double[] $d_y = {}; ->         double *d_y;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 1 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("double")*N); ->         cudaMalloc((void **)&d_x,sizeof(double)*N);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_y",ICuda.sizeof("double")*N); ->         cudaMalloc((void **)&d_y,sizeof(double)*N);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("double")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(double)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_y","$a2",ICuda.sizeof("double")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_y,a2,sizeof(double)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 2 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         __global__sum($d_x,$d_y); ->         sum<<<grid_size,block_size>>>(d_x,d_y);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 1 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         System.out.printf("Time = %g ms .\n",elapsed_time); ->         printf("Time = %g ms .\n",elapsed_time);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("double")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(double)*10);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 1 ms         System.out.printf("x sum:  %f \n",$b[0]); ->         printf("x sum:  %f \n",b[0]);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         System.out.printf("y sum: %f \n",$b[1]); ->         printf("y sum: %f \n",b[1]);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         System.out.printf("x2 sum: %f \n",$b[2]); ->         printf("x2 sum: %f \n",b[2]);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         System.out.printf("xy sum: %f \n",$b[3]); ->         printf("xy sum: %f \n",b[3]);
+[INFO 2023-07-22 11:30:33 ](Java2Cuda)耗时: 0 ms         System.out.printf("Result: y =  %f * x + (%f) \n",$b[4],$b[5]); ->         printf("Result: y =  %f * x + (%f) \n",b[4],b[5]);
+[INFO 2023-07-25 09:47:15 ]-------------------------新纪录--------------------------
+[INFO 2023-07-25 09:47:15 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-25 09:47:15 ]核函数数:1
+[INFO 2023-07-25 09:47:15 ]设备函数数:0
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 2 ms      int N = 1;//global ->      int N = 1;//global
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 7 ms int[] __device__d_z;//length:10 -> int d_z[10] =  {};//length:10
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 1 ms sum(int[] $d_x,int N)(GLOBAL) -> sum(int *d_x,int N)
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 4 ms         int[] __shared__s_x = {};//length:128 -> __shared__ int __shared__s_x[128];
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         int x = 0; ->         int x = 0;
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         if(n < N) { ->         if(n < N) {
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms             __shared__s_x[n] = $d_x[n]; ->             __shared__s_x[n] = d_x[n];
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms             { ->             {
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 1 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms             } ->             }
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 1 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 1 ms  -> 
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms     } ->     }
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms     @Override ->     @Override
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms     public void main() { ->     __device__ void main() {
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         N = argc - 1; ->         N = argc - 1;
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 1 ms         int[] $a = (int[]) ICuda.malloc(ICuda.sizeof("int")*N); ->         int *a = (int*) malloc(sizeof(int)*N);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         int[] $b = ICuda.malloc(ICuda.sizeof("int")*10); ->         int *b = (int *) malloc(sizeof(int)*10);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 1 ms             $a[x] = ICuda.atoi(argv[x + 1]); ->             a[x] = atoi(argv[x + 1]);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         int[] $d_x = {}; ->         int *d_x;
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("int")*N); ->         cudaMalloc((void **)&d_x,sizeof(int)*N);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 1 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("int")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(int)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 1 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         __global__sum($d_x,N); ->         sum<<<grid_size,block_size>>>(d_x,N);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 2 ms         System.out.printf("Time:%g ms\n",elapsed_time); ->         printf("Time:%g ms\n",elapsed_time);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("int")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(int)*10);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         System.out.printf("x:%d \n",$b[0]); ->         printf("x:%d \n",b[0]);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         ICuda.free($a); ->         free(a);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         ICuda.free($b); ->         free(b);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 0 ms         ICuda.cudaFree($d_x); ->         cudaFree(d_x);
+[INFO 2023-07-25 09:47:15 ](Java2Cuda)耗时: 1 ms } -> }
+[ERROR 2023-07-25 09:47:15 ]nvcc fatal   : Cannot find compiler 'cl.exe' in PATH
+
+[INFO 2023-07-25 10:17:36 ]-------------------------新纪录--------------------------
+[INFO 2023-07-25 10:17:36 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-25 10:17:36 ]核函数数:1
+[INFO 2023-07-25 10:17:36 ]设备函数数:0
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 2 ms      int N = 1;//global ->      int N = 1;//global
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 15 ms int[] __device__d_z;//length:10 -> int d_z[10] =  {};//length:10
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms sum(int[] $d_x,int N)(GLOBAL) -> sum(int *d_x,int N)
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 8 ms         int[] __shared__s_x = {};//length:128 -> __shared__ int __shared__s_x[128];
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms         int x = 0; ->         int x = 0;
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         if(n < N) { ->         if(n < N) {
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms             __shared__s_x[n] = $d_x[n]; ->             __shared__s_x[n] = d_x[n];
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms         } ->         }
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms         { ->         {
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms             { ->             {
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms             } ->             }
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms         } ->         }
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms         } ->         }
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms     } ->     }
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms     @Override ->     @Override
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms     public void main() { ->     __device__ void main() {
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 3 ms         N = argc - 1; ->         N = argc - 1;
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 4 ms         int[] $a = (int[]) ICuda.malloc(ICuda.sizeof("int")*N); ->         int *a = (int*) malloc(sizeof(int)*N);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms         int[] $b = ICuda.malloc(ICuda.sizeof("int")*10); ->         int *b = (int *) malloc(sizeof(int)*10);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms             $a[x] = ICuda.atoi(argv[x + 1]); ->             a[x] = atoi(argv[x + 1]);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         int[] $d_x = {}; ->         int *d_x;
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("int")*N); ->         cudaMalloc((void **)&d_x,sizeof(int)*N);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("int")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(int)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms  -> 
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms         __global__sum($d_x,N); ->         sum<<<grid_size,block_size>>>(d_x,N);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms         System.out.printf("Time:%g ms\n",elapsed_time); ->         printf("Time:%g ms\n",elapsed_time);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("int")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(int)*10);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms         System.out.printf("x:%d \n",$b[0]); ->         printf("x:%d \n",b[0]);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         ICuda.free($a); ->         free(a);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         ICuda.free($b); ->         free(b);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 0 ms         ICuda.cudaFree($d_x); ->         cudaFree(d_x);
+[INFO 2023-07-25 10:17:36 ](Java2Cuda)耗时: 1 ms } -> }
+[ERROR 2023-07-25 10:17:36 ]nvcc fatal   : Failed to preprocess host compiler properties.
+
+[INFO 2023-07-25 10:17:46 ]-------------------------新纪录--------------------------
+[INFO 2023-07-25 10:17:46 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-25 10:17:46 ]核函数数:1
+[INFO 2023-07-25 10:17:46 ]设备函数数:0
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms      int N = 1;//global ->      int N = 1;//global
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 8 ms int[] __device__d_z;//length:10 -> int d_z[10] =  {};//length:10
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 1 ms sum(int[] $d_x,int N)(GLOBAL) -> sum(int *d_x,int N)
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 1 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 5 ms         int[] __shared__s_x = {};//length:128 -> __shared__ int __shared__s_x[128];
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 1 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         int x = 0; ->         int x = 0;
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         if(n < N) { ->         if(n < N) {
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms             __shared__s_x[n] = $d_x[n]; ->             __shared__s_x[n] = d_x[n];
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms             { ->             {
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 1 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms             } ->             }
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 1 ms         } ->         }
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 1 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 1 ms  -> 
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 1 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms     } ->     }
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms     @Override ->     @Override
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms     public void main() { ->     __device__ void main() {
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 1 ms         N = argc - 1; ->         N = argc - 1;
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         int[] $a = (int[]) ICuda.malloc(ICuda.sizeof("int")*N); ->         int *a = (int*) malloc(sizeof(int)*N);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         int[] $b = ICuda.malloc(ICuda.sizeof("int")*10); ->         int *b = (int *) malloc(sizeof(int)*10);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms             $a[x] = ICuda.atoi(argv[x + 1]); ->             a[x] = atoi(argv[x + 1]);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         int[] $d_x = {}; ->         int *d_x;
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 1 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("int")*N); ->         cudaMalloc((void **)&d_x,sizeof(int)*N);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("int")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(int)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 1 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 1 ms         __global__sum($d_x,N); ->         sum<<<grid_size,block_size>>>(d_x,N);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 1 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         System.out.printf("Time:%g ms\n",elapsed_time); ->         printf("Time:%g ms\n",elapsed_time);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 2 ms  -> 
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("int")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(int)*10);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         System.out.printf("x:%d \n",$b[0]); ->         printf("x:%d \n",b[0]);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 1 ms  -> 
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         ICuda.free($a); ->         free(a);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         ICuda.free($b); ->         free(b);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms         ICuda.cudaFree($d_x); ->         cudaFree(d_x);
+[INFO 2023-07-25 10:17:46 ](Java2Cuda)耗时: 0 ms } -> }
+[ERROR 2023-07-25 10:17:46 ]nvcc fatal   : Failed to preprocess host compiler properties.
+
+[INFO 2023-07-25 10:19:02 ]-------------------------新纪录--------------------------
+[INFO 2023-07-25 10:19:02 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-25 10:19:02 ]核函数数:1
+[INFO 2023-07-25 10:19:02 ]设备函数数:0
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 1 ms      int N = 1;//global ->      int N = 1;//global
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 10 ms int[] __device__d_z;//length:10 -> int d_z[10] =  {};//length:10
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 1 ms sum(int[] $d_x,int N)(GLOBAL) -> sum(int *d_x,int N)
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 1 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 4 ms         int[] __shared__s_x = {};//length:128 -> __shared__ int __shared__s_x[128];
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 1 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         int x = 0; ->         int x = 0;
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 1 ms         if(n < N) { ->         if(n < N) {
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms             __shared__s_x[n] = $d_x[n]; ->             __shared__s_x[n] = d_x[n];
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 1 ms         { ->         {
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms             { ->             {
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms             } ->             }
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 2 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 1 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 1 ms         } ->         }
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms     } ->     }
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms     @Override ->     @Override
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms     public void main() { ->     __device__ void main() {
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         N = argc - 1; ->         N = argc - 1;
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         int[] $a = (int[]) ICuda.malloc(ICuda.sizeof("int")*N); ->         int *a = (int*) malloc(sizeof(int)*N);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 1 ms         int[] $b = ICuda.malloc(ICuda.sizeof("int")*10); ->         int *b = (int *) malloc(sizeof(int)*10);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms             $a[x] = ICuda.atoi(argv[x + 1]); ->             a[x] = atoi(argv[x + 1]);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 1 ms         } ->         }
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         int[] $d_x = {}; ->         int *d_x;
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 1 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("int")*N); ->         cudaMalloc((void **)&d_x,sizeof(int)*N);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("int")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(int)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 1 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         __global__sum($d_x,N); ->         sum<<<grid_size,block_size>>>(d_x,N);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 1 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         System.out.printf("Time:%g ms\n",elapsed_time); ->         printf("Time:%g ms\n",elapsed_time);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("int")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(int)*10);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         System.out.printf("x:%d \n",$b[0]); ->         printf("x:%d \n",b[0]);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         ICuda.free($a); ->         free(a);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         ICuda.free($b); ->         free(b);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms         ICuda.cudaFree($d_x); ->         cudaFree(d_x);
+[INFO 2023-07-25 10:19:02 ](Java2Cuda)耗时: 0 ms } -> }
+[ERROR 2023-07-25 10:19:02 ]nvcc fatal   : Cannot find compiler 'cl.exe' in PATH
+
+[INFO 2023-07-25 10:23:04 ]-------------------------新纪录--------------------------
+[INFO 2023-07-25 10:23:04 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-25 10:23:04 ]核函数数:1
+[INFO 2023-07-25 10:23:04 ]设备函数数:0
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms      int N = 1;//global ->      int N = 1;//global
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 14 ms int[] __device__d_z;//length:10 -> int d_z[10] =  {};//length:10
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms sum(int[] $d_x,int N)(GLOBAL) -> sum(int *d_x,int N)
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 6 ms         int[] __shared__s_x = {};//length:128 -> __shared__ int __shared__s_x[128];
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         int x = 0; ->         int x = 0;
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms         if(n < N) { ->         if(n < N) {
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms             __shared__s_x[n] = $d_x[n]; ->             __shared__s_x[n] = d_x[n];
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 2 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms             { ->             {
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms             } ->             }
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 2 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms         { ->         {
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms     } ->     }
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms     @Override ->     @Override
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms     public void main() { ->     __device__ void main() {
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms         N = argc - 1; ->         N = argc - 1;
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms         int[] $a = (int[]) ICuda.malloc(ICuda.sizeof("int")*N); ->         int *a = (int*) malloc(sizeof(int)*N);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         int[] $b = ICuda.malloc(ICuda.sizeof("int")*10); ->         int *b = (int *) malloc(sizeof(int)*10);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms             $a[x] = ICuda.atoi(argv[x + 1]); ->             a[x] = atoi(argv[x + 1]);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         int[] $d_x = {}; ->         int *d_x;
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("int")*N); ->         cudaMalloc((void **)&d_x,sizeof(int)*N);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("int")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(int)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms         __global__sum($d_x,N); ->         sum<<<grid_size,block_size>>>(d_x,N);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms         System.out.printf("Time:%g ms\n",elapsed_time); ->         printf("Time:%g ms\n",elapsed_time);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("int")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(int)*10);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms         System.out.printf("x:%d \n",$b[0]); ->         printf("x:%d \n",b[0]);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         ICuda.free($a); ->         free(a);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms         ICuda.free($b); ->         free(b);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 1 ms         ICuda.cudaFree($d_x); ->         cudaFree(d_x);
+[INFO 2023-07-25 10:23:04 ](Java2Cuda)耗时: 0 ms } -> }
+[ERROR 2023-07-25 10:23:04 ]nvcc fatal   : Cannot find compiler 'cl.exe' in PATH
+
+[INFO 2023-07-25 10:23:33 ]-------------------------新纪录--------------------------
+[INFO 2023-07-25 10:23:33 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-25 10:23:33 ]核函数数:1
+[INFO 2023-07-25 10:23:33 ]设备函数数:0
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 1 ms      int N = 1;//global ->      int N = 1;//global
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 10 ms int[] __device__d_z;//length:10 -> int d_z[10] =  {};//length:10
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 1 ms sum(int[] $d_x,int N)(GLOBAL) -> sum(int *d_x,int N)
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 5 ms         int[] __shared__s_x = {};//length:128 -> __shared__ int __shared__s_x[128];
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 1 ms         int x = 0; ->         int x = 0;
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 1 ms         if(n < N) { ->         if(n < N) {
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 1 ms             __shared__s_x[n] = $d_x[n]; ->             __shared__s_x[n] = d_x[n];
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 1 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 1 ms             { ->             {
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms             } ->             }
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 1 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 1 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 1 ms         } ->         }
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 1 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms     } ->     }
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms     @Override ->     @Override
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms     public void main() { ->     __device__ void main() {
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         N = argc - 1; ->         N = argc - 1;
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 2 ms         int[] $a = (int[]) ICuda.malloc(ICuda.sizeof("int")*N); ->         int *a = (int*) malloc(sizeof(int)*N);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 1 ms         int[] $b = ICuda.malloc(ICuda.sizeof("int")*10); ->         int *b = (int *) malloc(sizeof(int)*10);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms             $a[x] = ICuda.atoi(argv[x + 1]); ->             a[x] = atoi(argv[x + 1]);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         int[] $d_x = {}; ->         int *d_x;
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 1 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("int")*N); ->         cudaMalloc((void **)&d_x,sizeof(int)*N);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("int")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(int)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 1 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         __global__sum($d_x,N); ->         sum<<<grid_size,block_size>>>(d_x,N);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 2 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         System.out.printf("Time:%g ms\n",elapsed_time); ->         printf("Time:%g ms\n",elapsed_time);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("int")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(int)*10);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         System.out.printf("x:%d \n",$b[0]); ->         printf("x:%d \n",b[0]);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         ICuda.free($a); ->         free(a);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         ICuda.free($b); ->         free(b);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms         ICuda.cudaFree($d_x); ->         cudaFree(d_x);
+[INFO 2023-07-25 10:23:33 ](Java2Cuda)耗时: 0 ms } -> }
+[ERROR 2023-07-25 10:23:33 ]nvcc fatal   : Cannot find compiler 'cl.exe' in PATH
+
+[INFO 2023-07-25 10:23:54 ]-------------------------新纪录--------------------------
+[INFO 2023-07-25 10:23:54 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-25 10:23:54 ]核函数数:1
+[INFO 2023-07-25 10:23:54 ]设备函数数:0
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 1 ms      int N = 1;//global ->      int N = 1;//global
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 9 ms int[] __device__d_z;//length:10 -> int d_z[10] =  {};//length:10
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 1 ms sum(int[] $d_x,int N)(GLOBAL) -> sum(int *d_x,int N)
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 1 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 6 ms         int[] __shared__s_x = {};//length:128 -> __shared__ int __shared__s_x[128];
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 1 ms         int x = 0; ->         int x = 0;
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         if(n < N) { ->         if(n < N) {
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms             __shared__s_x[n] = $d_x[n]; ->             __shared__s_x[n] = d_x[n];
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 1 ms         } ->         }
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms             { ->             {
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms             } ->             }
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 1 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 2 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 1 ms         { ->         {
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 1 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms     } ->     }
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms     @Override ->     @Override
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms     public void main() { ->     __device__ void main() {
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 1 ms         N = argc - 1; ->         N = argc - 1;
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         int[] $a = (int[]) ICuda.malloc(ICuda.sizeof("int")*N); ->         int *a = (int*) malloc(sizeof(int)*N);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 1 ms         int[] $b = ICuda.malloc(ICuda.sizeof("int")*10); ->         int *b = (int *) malloc(sizeof(int)*10);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms             $a[x] = ICuda.atoi(argv[x + 1]); ->             a[x] = atoi(argv[x + 1]);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         int[] $d_x = {}; ->         int *d_x;
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("int")*N); ->         cudaMalloc((void **)&d_x,sizeof(int)*N);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 1 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("int")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(int)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 1 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         __global__sum($d_x,N); ->         sum<<<grid_size,block_size>>>(d_x,N);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         System.out.printf("Time:%g ms\n",elapsed_time); ->         printf("Time:%g ms\n",elapsed_time);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 1 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("int")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(int)*10);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         System.out.printf("x:%d \n",$b[0]); ->         printf("x:%d \n",b[0]);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         ICuda.free($a); ->         free(a);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms         ICuda.free($b); ->         free(b);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 1 ms         ICuda.cudaFree($d_x); ->         cudaFree(d_x);
+[INFO 2023-07-25 10:23:54 ](Java2Cuda)耗时: 0 ms } -> }
+[ERROR 2023-07-25 10:23:54 ]nvcc fatal   : Cannot find compiler 'cl.exe' in PATH
+
+[INFO 2023-07-25 10:26:19 ]-------------------------新纪录--------------------------
+[INFO 2023-07-25 10:26:19 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-25 10:26:19 ]核函数数:1
+[INFO 2023-07-25 10:26:19 ]设备函数数:0
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 2 ms      int N = 1;//global ->      int N = 1;//global
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 7 ms int[] __device__d_z;//length:10 -> int d_z[10] =  {};//length:10
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms sum(int[] $d_x,int N)(GLOBAL) -> sum(int *d_x,int N)
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 1 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 3 ms         int[] __shared__s_x = {};//length:128 -> __shared__ int __shared__s_x[128];
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         int x = 0; ->         int x = 0;
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 1 ms         if(n < N) { ->         if(n < N) {
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms             __shared__s_x[n] = $d_x[n]; ->             __shared__s_x[n] = d_x[n];
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms             { ->             {
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 1 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms             } ->             }
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 1 ms  -> 
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms     } ->     }
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms     @Override ->     @Override
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms     public void main() { ->     __device__ void main() {
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         N = argc - 1; ->         N = argc - 1;
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         int[] $a = (int[]) ICuda.malloc(ICuda.sizeof("int")*N); ->         int *a = (int*) malloc(sizeof(int)*N);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 2 ms         int[] $b = ICuda.malloc(ICuda.sizeof("int")*10); ->         int *b = (int *) malloc(sizeof(int)*10);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 1 ms             $a[x] = ICuda.atoi(argv[x + 1]); ->             a[x] = atoi(argv[x + 1]);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 1 ms         int[] $d_x = {}; ->         int *d_x;
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("int")*N); ->         cudaMalloc((void **)&d_x,sizeof(int)*N);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("int")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(int)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 1 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         __global__sum($d_x,N); ->         sum<<<grid_size,block_size>>>(d_x,N);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         System.out.printf("Time:%g ms\n",elapsed_time); ->         printf("Time:%g ms\n",elapsed_time);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("int")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(int)*10);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         System.out.printf("x:%d \n",$b[0]); ->         printf("x:%d \n",b[0]);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         ICuda.free($a); ->         free(a);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         ICuda.free($b); ->         free(b);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms         ICuda.cudaFree($d_x); ->         cudaFree(d_x);
+[INFO 2023-07-25 10:26:19 ](Java2Cuda)耗时: 0 ms } -> }
+[ERROR 2023-07-25 10:26:19 ]nvcc fatal   : Cannot find compiler 'cl.exe' in PATH
+
+[INFO 2023-07-25 10:26:45 ]-------------------------新纪录--------------------------
+[INFO 2023-07-25 10:26:45 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-25 10:26:45 ]核函数数:1
+[INFO 2023-07-25 10:26:45 ]设备函数数:0
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 1 ms      int N = 1;//global ->      int N = 1;//global
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 6 ms int[] __device__d_z;//length:10 -> int d_z[10] =  {};//length:10
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms sum(int[] $d_x,int N)(GLOBAL) -> sum(int *d_x,int N)
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 4 ms         int[] __shared__s_x = {};//length:128 -> __shared__ int __shared__s_x[128];
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 1 ms         int x = 0; ->         int x = 0;
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         if(n < N) { ->         if(n < N) {
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms             __shared__s_x[n] = $d_x[n]; ->             __shared__s_x[n] = d_x[n];
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 2 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms             { ->             {
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 1 ms             } ->             }
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 1 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 1 ms  -> 
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 1 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms     } ->     }
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms     @Override ->     @Override
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms     public void main() { ->     __device__ void main() {
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         N = argc - 1; ->         N = argc - 1;
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 1 ms         int[] $a = (int[]) ICuda.malloc(ICuda.sizeof("int")*N); ->         int *a = (int*) malloc(sizeof(int)*N);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         int[] $b = ICuda.malloc(ICuda.sizeof("int")*10); ->         int *b = (int *) malloc(sizeof(int)*10);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms             $a[x] = ICuda.atoi(argv[x + 1]); ->             a[x] = atoi(argv[x + 1]);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         int[] $d_x = {}; ->         int *d_x;
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("int")*N); ->         cudaMalloc((void **)&d_x,sizeof(int)*N);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 2 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("int")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(int)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 1 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 1 ms         __global__sum($d_x,N); ->         sum<<<grid_size,block_size>>>(d_x,N);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         System.out.printf("Time:%g ms\n",elapsed_time); ->         printf("Time:%g ms\n",elapsed_time);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("int")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(int)*10);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         System.out.printf("x:%d \n",$b[0]); ->         printf("x:%d \n",b[0]);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 1 ms  -> 
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         ICuda.free($a); ->         free(a);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         ICuda.free($b); ->         free(b);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms         ICuda.cudaFree($d_x); ->         cudaFree(d_x);
+[INFO 2023-07-25 10:26:45 ](Java2Cuda)耗时: 0 ms } -> }
+[ERROR 2023-07-25 10:26:45 ]nvcc fatal   : Cannot find compiler 'cl.exe' in PATH
+
+[INFO 2023-07-25 10:29:52 ]-------------------------新纪录--------------------------
+[INFO 2023-07-25 10:29:52 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-25 10:29:52 ]核函数数:1
+[INFO 2023-07-25 10:29:52 ]设备函数数:0
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 2 ms      int N = 1;//global ->      int N = 1;//global
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 7 ms int[] __device__d_z;//length:10 -> int d_z[10] =  {};//length:10
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 1 ms sum(int[] $d_x,int N)(GLOBAL) -> sum(int *d_x,int N)
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 3 ms         int[] __shared__s_x = {};//length:128 -> __shared__ int __shared__s_x[128];
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         int x = 0; ->         int x = 0;
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         if(n < N) { ->         if(n < N) {
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms             __shared__s_x[n] = $d_x[n]; ->             __shared__s_x[n] = d_x[n];
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms             { ->             {
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms             } ->             }
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 1 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 1 ms         } ->         }
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms     } ->     }
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms     @Override ->     @Override
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms     public void main() { ->     __device__ void main() {
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         N = argc - 1; ->         N = argc - 1;
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 1 ms         int[] $a = (int[]) ICuda.malloc(ICuda.sizeof("int")*N); ->         int *a = (int*) malloc(sizeof(int)*N);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         int[] $b = ICuda.malloc(ICuda.sizeof("int")*10); ->         int *b = (int *) malloc(sizeof(int)*10);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms             $a[x] = ICuda.atoi(argv[x + 1]); ->             a[x] = atoi(argv[x + 1]);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 1 ms         } ->         }
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         int[] $d_x = {}; ->         int *d_x;
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("int")*N); ->         cudaMalloc((void **)&d_x,sizeof(int)*N);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("int")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(int)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 2 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 1 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         __global__sum($d_x,N); ->         sum<<<grid_size,block_size>>>(d_x,N);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         System.out.printf("Time:%g ms\n",elapsed_time); ->         printf("Time:%g ms\n",elapsed_time);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 1 ms  -> 
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("int")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(int)*10);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         System.out.printf("x:%d \n",$b[0]); ->         printf("x:%d \n",b[0]);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         ICuda.free($a); ->         free(a);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         ICuda.free($b); ->         free(b);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms         ICuda.cudaFree($d_x); ->         cudaFree(d_x);
+[INFO 2023-07-25 10:29:52 ](Java2Cuda)耗时: 0 ms } -> }
+[ERROR 2023-07-25 10:29:52 ]nvcc fatal   : Cannot find compiler 'cl.exe' in PATH
+
+[INFO 2023-07-25 10:30:10 ]-------------------------新纪录--------------------------
+[INFO 2023-07-25 10:30:10 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-25 10:30:10 ]核函数数:1
+[INFO 2023-07-25 10:30:10 ]设备函数数:0
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 1 ms      int N = 1;//global ->      int N = 1;//global
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 6 ms int[] __device__d_z;//length:10 -> int d_z[10] =  {};//length:10
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 1 ms sum(int[] $d_x,int N)(GLOBAL) -> sum(int *d_x,int N)
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 3 ms         int[] __shared__s_x = {};//length:128 -> __shared__ int __shared__s_x[128];
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         int x = 0; ->         int x = 0;
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         if(n < N) { ->         if(n < N) {
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms             __shared__s_x[n] = $d_x[n]; ->             __shared__s_x[n] = d_x[n];
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 1 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms             { ->             {
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms             } ->             }
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 1 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 1 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 1 ms         } ->         }
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms     } ->     }
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms     @Override ->     @Override
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms     public void main() { ->     __device__ void main() {
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         N = argc - 1; ->         N = argc - 1;
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 1 ms         int[] $a = (int[]) ICuda.malloc(ICuda.sizeof("int")*N); ->         int *a = (int*) malloc(sizeof(int)*N);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         int[] $b = ICuda.malloc(ICuda.sizeof("int")*10); ->         int *b = (int *) malloc(sizeof(int)*10);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 1 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms             $a[x] = ICuda.atoi(argv[x + 1]); ->             a[x] = atoi(argv[x + 1]);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         int[] $d_x = {}; ->         int *d_x;
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 1 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("int")*N); ->         cudaMalloc((void **)&d_x,sizeof(int)*N);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("int")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(int)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 1 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         __global__sum($d_x,N); ->         sum<<<grid_size,block_size>>>(d_x,N);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 1 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         System.out.printf("Time:%g ms\n",elapsed_time); ->         printf("Time:%g ms\n",elapsed_time);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("int")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(int)*10);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         System.out.printf("x:%d \n",$b[0]); ->         printf("x:%d \n",b[0]);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         ICuda.free($a); ->         free(a);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         ICuda.free($b); ->         free(b);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms         ICuda.cudaFree($d_x); ->         cudaFree(d_x);
+[INFO 2023-07-25 10:30:10 ](Java2Cuda)耗时: 0 ms } -> }
+[ERROR 2023-07-25 10:30:10 ]nvcc fatal   : Cannot find compiler 'cl.exe' in PATH
+
+[INFO 2023-07-25 10:32:01 ]-------------------------新纪录--------------------------
+[INFO 2023-07-25 10:32:01 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-25 10:32:01 ]核函数数:1
+[INFO 2023-07-25 10:32:01 ]设备函数数:0
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms      int N = 1;//global ->      int N = 1;//global
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 6 ms int[] __device__d_z;//length:10 -> int d_z[10] =  {};//length:10
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms sum(int[] $d_x,int N)(GLOBAL) -> sum(int *d_x,int N)
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 1 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 2 ms         int[] __shared__s_x = {};//length:128 -> __shared__ int __shared__s_x[128];
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         int x = 0; ->         int x = 0;
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         if(n < N) { ->         if(n < N) {
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms             __shared__s_x[n] = $d_x[n]; ->             __shared__s_x[n] = d_x[n];
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 1 ms             { ->             {
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms             } ->             }
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 1 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 1 ms  -> 
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 2 ms         } ->         }
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms     } ->     }
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms     @Override ->     @Override
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms     public void main() { ->     __device__ void main() {
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         N = argc - 1; ->         N = argc - 1;
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         int[] $a = (int[]) ICuda.malloc(ICuda.sizeof("int")*N); ->         int *a = (int*) malloc(sizeof(int)*N);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 1 ms         int[] $b = ICuda.malloc(ICuda.sizeof("int")*10); ->         int *b = (int *) malloc(sizeof(int)*10);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms             $a[x] = ICuda.atoi(argv[x + 1]); ->             a[x] = atoi(argv[x + 1]);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 1 ms         int[] $d_x = {}; ->         int *d_x;
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("int")*N); ->         cudaMalloc((void **)&d_x,sizeof(int)*N);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("int")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(int)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 1 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 1 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         __global__sum($d_x,N); ->         sum<<<grid_size,block_size>>>(d_x,N);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 1 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         System.out.printf("Time:%g ms\n",elapsed_time); ->         printf("Time:%g ms\n",elapsed_time);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 1 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("int")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(int)*10);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         System.out.printf("x:%d \n",$b[0]); ->         printf("x:%d \n",b[0]);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         ICuda.free($a); ->         free(a);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         ICuda.free($b); ->         free(b);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms         ICuda.cudaFree($d_x); ->         cudaFree(d_x);
+[INFO 2023-07-25 10:32:01 ](Java2Cuda)耗时: 0 ms } -> }
+[ERROR 2023-07-25 10:32:01 ]nvcc fatal   : Cannot find compiler 'cl.exe' in PATH
+
+[INFO 2023-07-25 10:53:38 ]-------------------------新纪录--------------------------
+[INFO 2023-07-25 10:53:38 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-25 10:53:38 ]核函数数:1
+[INFO 2023-07-25 10:53:38 ]设备函数数:0
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 1 ms      int N = 1;//global ->      int N = 1;//global
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 7 ms int[] __device__d_z;//length:10 -> int d_z[10] =  {};//length:10
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 1 ms sum(int[] $d_x,int N)(GLOBAL) -> sum(int *d_x,int N)
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 1 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 3 ms         int[] __shared__s_x = {};//length:128 -> __shared__ int __shared__s_x[128];
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 1 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         int x = 0; ->         int x = 0;
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         if(n < N) { ->         if(n < N) {
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms             __shared__s_x[n] = $d_x[n]; ->             __shared__s_x[n] = d_x[n];
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 1 ms             { ->             {
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms             } ->             }
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 1 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 5 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 1 ms  -> 
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 1 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms     } ->     }
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms     @Override ->     @Override
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms     public void main() { ->     __device__ void main() {
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         N = argc - 1; ->         N = argc - 1;
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         int[] $a = (int[]) ICuda.malloc(ICuda.sizeof("int")*N); ->         int *a = (int*) malloc(sizeof(int)*N);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 1 ms         int[] $b = ICuda.malloc(ICuda.sizeof("int")*10); ->         int *b = (int *) malloc(sizeof(int)*10);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms             $a[x] = ICuda.atoi(argv[x + 1]); ->             a[x] = atoi(argv[x + 1]);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 1 ms         int[] $d_x = {}; ->         int *d_x;
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("int")*N); ->         cudaMalloc((void **)&d_x,sizeof(int)*N);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("int")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(int)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 1 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         __global__sum($d_x,N); ->         sum<<<grid_size,block_size>>>(d_x,N);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         System.out.printf("Time:%g ms\n",elapsed_time); ->         printf("Time:%g ms\n",elapsed_time);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("int")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(int)*10);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         System.out.printf("x:%d \n",$b[0]); ->         printf("x:%d \n",b[0]);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         ICuda.free($a); ->         free(a);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         ICuda.free($b); ->         free(b);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms         ICuda.cudaFree($d_x); ->         cudaFree(d_x);
+[INFO 2023-07-25 10:53:38 ](Java2Cuda)耗时: 0 ms } -> }
+[INFO 2023-07-25 10:54:11 ]-------------------------新纪录--------------------------
+[INFO 2023-07-25 10:54:11 ]使用版本:v1.2023.0719.11
+[INFO 2023-07-25 10:54:11 ]核函数数:1
+[INFO 2023-07-25 10:54:11 ]设备函数数:0
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms      int N = 1;//global ->      int N = 1;//global
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 3 ms int[] __device__d_z;//length:10 -> int d_z[10] =  {};//length:10
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms sum(int[] $d_x,int N)(GLOBAL) -> sum(int *d_x,int N)
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         final int tid = threadIdx.x; ->         const int tid = threadIdx.x;
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         final int bid = blockIdx.x; ->         const int bid = blockIdx.x;
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         int[] __shared__s_x = {};//length:128 -> __shared__ int __shared__s_x[128];
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         final int n = bid * blockDim.x + tid; ->         const int n = bid * blockDim.x + tid;
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         int x = 0; ->         int x = 0;
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         if(n < N) { ->         if(n < N) {
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms             __shared__s_x[n] = $d_x[n]; ->             __shared__s_x[n] = d_x[n];
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         ICuda.__syncthreads(); ->         __syncthreads();
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1) ->         for (int offset = blockDim.x >> 1; offset >= 32; offset >>= 1)
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms             if (tid < offset) ->             if (tid < offset)
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms             { ->             {
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms                 __shared__s_x[tid] += __shared__s_x[tid + offset]; ->                 __shared__s_x[tid] += __shared__s_x[tid + offset];
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 8 ms             } ->             }
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms             ICuda.__syncthreads(); ->             __syncthreads();
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         x = __shared__s_x[tid]; ->         x = __shared__s_x[tid];
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 1 ms         for (int offset = 16; offset > 0; offset >>= 1) ->         for (int offset = 16; offset > 0; offset >>= 1)
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms             x += ICuda.__shfl_down_sync("0xffffffff",x, offset); ->             x += __shfl_down_sync(0xffffffff,x, offset);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         if (tid == 0) ->         if (tid == 0)
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         { ->         {
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 1 ms  -> 
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms             ICuda.atomicAdd(__device__d_z[0], x); ->             atomicAdd(&d_z[0], x);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms } -> }
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         N = argc - 1; ->         N = argc - 1;
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         int[] $a = (int[]) ICuda.malloc(ICuda.sizeof("int")*N); ->         int *a = (int*) malloc(sizeof(int)*N);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         int[] $b = ICuda.malloc(ICuda.sizeof("int")*10); ->         int *b = (int *) malloc(sizeof(int)*10);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         for (int x = 0 ;x < N;x ++) { ->         for (int x = 0 ;x < N;x ++) {
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms             $a[x] = ICuda.atoi(argv[x + 1]); ->             a[x] = atoi(argv[x + 1]);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         } ->         }
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         int[] $d_x = {}; ->         int *d_x;
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMalloc("$d_x",ICuda.sizeof("int")*N); ->         cudaMalloc((void **)&d_x,sizeof(int)*N);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpy("$d_x","$a",ICuda.sizeof("int")*N,cudaMemcpyHostToDevice); ->         cudaMemcpy(d_x,a,sizeof(int)*N,cudaMemcpyHostToDevice);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         final int block_size = 128; ->         const int block_size = 128;
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         final int grid_size =  (N + block_size - 1) / block_size; ->         const int grid_size =  (N + block_size - 1) / block_size;
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         cudaEvent_t start = new cudaEvent_t(); ->         cudaEvent_t start ;
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         cudaEvent_t stop = new cudaEvent_t(); ->         cudaEvent_t stop ;
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(start); ->         cudaEventCreate(&start);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventCreate(stop); ->         cudaEventCreate(&stop);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventRecord(start); ->         cudaEventRecord(start);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         __global__sum($d_x,N); ->         sum<<<grid_size,block_size>>>(d_x,N);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 6 ms         ICuda.cudaEventRecord(stop); ->         cudaEventRecord(stop);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventSynchronize(stop); ->         cudaEventSynchronize(stop);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         float elapsed_time = 0; ->         float elapsed_time = 0;
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         ICuda.cudaEventElapsedTime(elapsed_time,start,stop); ->         cudaEventElapsedTime(&elapsed_time,start,stop);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         System.out.printf("Time:%g ms\n",elapsed_time); ->         printf("Time:%g ms\n",elapsed_time);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         ICuda.cudaDeviceSynchronize(); ->         cudaDeviceSynchronize();
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         ICuda.cudaMemcpyFromSymbol("b","d_z",ICuda.sizeof("int")*10); ->         cudaMemcpyFromSymbol(b,d_z,sizeof(int)*10);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         System.out.printf("x:%d \n",$b[0]); ->         printf("x:%d \n",b[0]);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms  -> 
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         ICuda.free($a); ->         free(a);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         ICuda.free($b); ->         free(b);
+[INFO 2023-07-25 10:54:11 ](Java2Cuda)耗时: 0 ms         ICuda.cudaFree($d_x); ->         cudaFree(d_x);

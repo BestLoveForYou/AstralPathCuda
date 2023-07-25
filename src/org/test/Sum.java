@@ -33,12 +33,13 @@ public class Sum implements ICuda {
             x += ICuda.__shfl_down_sync("0xffffffff",x, offset);
         }
 
+
         if (tid == 0)
         {
 
             ICuda.atomicAdd(__device__d_z[0], x);
         }
-    }
+    }//End
     @Override
     public void main() {
         N = argc - 1;

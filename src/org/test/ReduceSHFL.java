@@ -8,7 +8,7 @@ import org.dao.base.th.gridDim;
 import org.dao.base.th.threadIdx;
 
 public class ReduceSHFL implements ICuda {
-    public final int N = 1000;//global
+    public final int N = 100000;//global
     public double[] __device__d_z;//length:10
     public void __global__sum(double[] $d_x,double[] $d_y) {
         final int tid = threadIdx.x;
@@ -68,7 +68,7 @@ public class ReduceSHFL implements ICuda {
             __device__d_z[5] = (__device__d_z[1] / N) - ((__device__d_z[0] / N) * __device__d_z[4]);
 
         }
-    }
+    }//End
     @Override
     public void main() {
         double[] $a = ICuda.malloc(ICuda.sizeof("double")*N);
